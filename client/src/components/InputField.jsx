@@ -2,12 +2,12 @@ import React from 'react'
 
 const InputField = (props) => {
   return (
-    <div className='mb-6'>
-      <label class='text-2xl block text-gray-600 mb-2'>
+    <div className='mb-3'>
+      <label class='text-md block mb-1'>
         {props.label}
       </label>
       <input type={props.type} placeholder={props.placeholder} 
-      class='w-full text-xl pl-3 pt-2 pb-2 rounded-xl border border-stone-400 focus:outline-none focus:ring-2 focus:ring-blue-400' >
+      class='w-full text-md pl-2 pt-1 pb-1 rounded-lg border border-stone-500 focus:outline-none focus:ring-1 focus:ring-blue-400' >
 
       </input>
     </div>
