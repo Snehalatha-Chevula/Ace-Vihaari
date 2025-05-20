@@ -1,23 +1,57 @@
-import React from 'react'
-import Button from "../components/Button"
-import InputField from "../components/InputField"
-import logo1 from "../assets/logo1.png"
+import React, { useState } from 'react';
+import Button from "../components/Button";
+import InputField from "../components/InputField";
+import logo1 from "../assets/logo1.png";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
+
+    const handleLogin = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        console.log(response);
+
+        const data = await response.json();
+        if (response.ok) {
+          console.log('Login successful:', data);
+          localStorage.setItem('token', data.token);
+          if (data.user.role === 'student') {
+            navigate('./pages/student/home');
+          } else if (data.user.role === 'faculty') {
+            navigate('./pages/faculty/home');
+          }
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error logging in:', error);
+      }
+    };
   return (
-    <div class='w-full flex h-screen bg-gradient-to-br from-sky-100 via-white to-white'>
+    <div className='w-full flex h-screen bg-gradient-to-br from-sky-100 via-white to-white'>
         {/*Left Section*/}
-        <div class='w-1/2  flex justify-center items-center'>
-            <img src={logo1} class='w-90 h-100'/>
+        <div className='w-1/2  flex justify-center items-center'>
+            <img src={logo1} className='w-90 h-100'/>
         </div>
 
         {/*Right Section*/}
-        <div class='w-1/2 flex justify-center items-center bg-white'>
-            <form class=' w-[60%] h-[80%] p-10 rounded-3xl shadow-2xl text-center'>
-                <h1 class='text-3xl font-semibold mt-3 mb-7'>Login</h1>
+        <div className='w-1/2 flex justify-center items-center bg-white'>
+            <form className=' w-[60%] h-[80%] p-10 rounded-3xl shadow-2xl text-center' onSubmit={handleLogin}>
+                <h1 className='text-3xl font-semibold mt-3 mb-7'>Login</h1>
                 <div className="text-left">
-                  <InputField label='Email' type='text' placeholder='Email'/>
-                  <InputField label='Password' type='password' placeholder='password'/>
+                  <InputField label='Email' type='text' placeholder='Email' value={username} onChange={(e)=>setusername(e.target.value)} />
+                  <InputField label='Password' type='password' placeholder='password' value={password} onChange={(e)=>setpassword(e.target.value)} />
                 </div>
                 <div className="flex flex-col md:flex-row justify-around items-center mb-5 mt-7">
                     <Button type='submit' text='Submit'/>
