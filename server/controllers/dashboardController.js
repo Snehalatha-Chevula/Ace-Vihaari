@@ -5,13 +5,15 @@ exports.getPerformanceData = async(request, response)=>{
     console.log(userID);
     try{
         const [rows] = await db.query(`SELECT * from academicInfo WHERE userID = ?`,[userID]);
-        const {currentCGPA, currentSem } = rows[0];
+        const {currentSem } = rows[0];
         let semester =[];
         let cgpaHistory = [];
         const [cgpas] = await db.query(`SELECT * FROM cgpa WHERE userID = ?`, [userID]);
+        let currentCGPA;
         for(let i=0;i<currentSem-1;i++){
             semester.push(`Sem ${i+1}`);
             cgpaHistory.push(cgpas[0][`sem${i+1}`]);
+            currentCGPA = cgpas[0][`sem${i+1}`];
         }
         return response.status(200).json({
             message : {
