@@ -3,41 +3,41 @@ import Button from "../components/Button";
 import InputField from "../components/InputField";
 import logo1 from "../assets/logo1.png";
 import {useNavigate} from "react-router-dom";
+import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
 
-    const handleLogin = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await fetch('http://localhost:5000/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password }),
-        });
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await axios.post('/api/auth/login', { username, password });
 
-        console.log(response);
+    const data = response.data;
 
-        const data = await response.json();
-        if (response.ok) {
-          console.log('Login successful:', data);
-          localStorage.setItem('token', data.token);
-          if (data.user.role === 'student') {
-            navigate('./pages/student/home');
-          } else if (data.user.role === 'faculty') {
-            navigate('./pages/faculty/home');
-          }
-        } else {
-          alert(data.message);
-        }
-      } catch (error) {
-        console.error('Error logging in:', error);
+    if (response.status === 200) {
+      console.log('Login successful:', data);
+      localStorage.setItem('token', data.token);
+
+      if (data.user.role === 'student') {
+        navigate('/pages/student/home');
+      } else if (data.user.role === 'faculty') {
+        navigate('/pages/faculty/home');
       }
-    };
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    if (error.response && error.response.data && error.response.data.message) {
+      alert(error.response.data.message);
+    } else {
+      console.error('Error logging in:', error);
+      alert('An unexpected error occurred.');
+    }
+  }
+};
   return (
     <div className='w-full flex h-screen bg-gradient-to-br from-sky-100 via-white to-white'>
         {/*Left Section*/}
