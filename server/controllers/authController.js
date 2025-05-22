@@ -6,29 +6,27 @@ exports.loginUser = async(request, response) => {
 
     const {username, password} = request.body;
     try{
-        const isfaculty = username.startsWith('F_');
-        const table = isfaculty ? 'faculty' : 'students';
 
-        const filteredUserName = username.substring(2);
-        const [rows] = await db.query(`SELECT * FROM ${table} WHERE username = ?`, [filteredUserName]);
+        const [rows] = await db.query(`SELECT * FROM users WHERE userID = ?`, [username]);
         if(rows.length == 0){
             return response.status(404).json({message: 'User not found....' });
         }
 
         const user = rows[0];
-        const isMatch = await bcrypt.compare(password,user.password);
+        const isMatch = await bcrypt.compare(password,user.userPassword);
 
         if(!isMatch){
-            return response.status(404).json({message: 'Invalid Credentials' });
+            return response.status(404).json({message: 'Invalid Password' });
         }
-        
-        const token = generateToken(user.username, isfaculty ? 'faculty' : 'student');
+
+        const isfaculty = username.startsWith('F_') ? true : false;
+         
+        const token = generateToken(username, isfaculty ? 'faculty' : 'student');
 
         return response.status(200).json({
             message : 'Login Successful....',
             user : {
-                username : user.username,
-                email : user.email,
+                userID : username,
                 role : isfaculty ? 'faculty' : 'student'
             },
             token

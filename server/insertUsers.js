@@ -7,17 +7,25 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
 
 const users = [
   {
-    role: 'student',
-    username: 'sneha',
-    password: '123456',
-    email: 'student1@example.com',
+    username: 'S_22AG1A6677',
+    password: 'Sneha@{1521}',
   },
   {
-    role: 'faculty',
-    username: 'rajesh',
-    password: 'rajesh123',
-    email: 'faculty1@example.com',
+    username: 'S_22AG1A6692',
+    password: 'Rajesh@{2003}',
   },
+  {
+    username: 'S_22AG1A66B5',
+    password: 'Pandhi@{gunna1}',
+  },
+  {
+    username: 'F_1',
+    password: '123',
+  },
+  {
+    username: 'F_2',
+    password: '456',
+  }
 ];
 
 (async () => {
@@ -33,11 +41,11 @@ const users = [
     for (const user of users) {
       const hashedPassword = await bcrypt.hash(user.password, 10);
 
-      const table = user.role === 'student' ? 'students' : 'faculty';
+      const table = 'users';
 
       const [rows] = await connection.execute(
-        `INSERT INTO ${table} (username, password, email) VALUES (?, ?, ?)`,
-        [user.username, hashedPassword, user.email]
+        `INSERT INTO ${table} (userID, userPassword) VALUES (?, ?)`,
+        [user.username, hashedPassword]
       );
 
       console.log(`✅ Inserted into ${table}: ${user.username}`);

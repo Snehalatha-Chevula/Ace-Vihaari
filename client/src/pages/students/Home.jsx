@@ -1,8 +1,9 @@
 import React from 'react'
+import StudentDashboard from './dashboard';
 
 const Home = () => {
   return (
-    <div className='text-2xl font-bold text-red-700'>Welcome Students !!</div>
+    <StudentDashboard/>
   )
 }
 
