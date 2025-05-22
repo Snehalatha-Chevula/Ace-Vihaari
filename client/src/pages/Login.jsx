@@ -22,9 +22,9 @@ const Login = () => {
       localStorage.setItem('token', data.token);
 
       if (data.user.role === 'student') {
-        navigate('/pages/student/home');
+        navigate(`/pages/student/home?user=${username}`);
       } else if (data.user.role === 'faculty') {
-        navigate('/pages/faculty/home');
+        navigate(`/pages/faculty/home?user=${username}`);
       }
     } else {
       alert(data.message);

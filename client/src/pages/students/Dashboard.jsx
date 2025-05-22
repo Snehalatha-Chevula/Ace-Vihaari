@@ -15,16 +15,14 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
+        const url = new URL(window.location.href);
+        const userID = url.searchParams.get('user');
   
-        let performance = await axios.post('/api/dashboard/getPerformanceData',{userID : 'S_22AG1A6677'});
-        console.log(performance.data);
+        let performance = await axios.post('/api/dashboard/getPerformanceData',{userID});
         performance = performance.data.message;
-        let attendance = await axios.post('/api/dashboard/getAttendanceData',{userID : 'S_22AG1A6677'});
-        console.log(attendance.data);
+        let attendance = await axios.post('/api/dashboard/getAttendanceData',{userID});
         attendance = attendance.data.message;
-        let user = await axios.post('/api/dashboard/getUserName',{userID : 'S_22AG1A6677'});
-        console.log(user.data);
-        console.log(user.data.message);
+        let user = await axios.post('/api/dashboard/getUserName',{userID});
         user = user.data.message.fullName;
         
         setDashboardData({
