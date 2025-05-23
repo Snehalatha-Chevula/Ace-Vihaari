@@ -1,7 +1,12 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import StudentHome from "./pages/students/Home";
-import FacultyHome from "./pages/faculty/Home";
 import Login from "./pages/Login"
+import Dashboard from "./pages/students/Dashboard";
+import NotFound from "./pages/NotFound";
+import Notes from "./pages/students/Notes";
+import Notifications from "./pages/students/Notifications";
+import Profile from "./pages/students/profile";
+import Leaderboard from "./pages/students/Leaderboard";
+import CodingStats from "./pages/students/CodingStats";
 
 
 function App() {
@@ -10,8 +15,13 @@ function App() {
     <Router>
       <Routes>
         <Route path = "/" element = {<Login/>}/> 
-        <Route path = "/pages/student/home" element = {<StudentHome/>} />
-        <Route path = "/pages/faculty/home" element = {<FacultyHome/>} />
+        <Route path = "/student/dashboard" element = {<Dashboard/>} />
+        <Route path = "/student/notes" element = {<Notes/>} />
+        <Route path = "/student/notifications" element = {<Notifications/>} />
+        <Route path = "/student/profile" element = {<Profile/>} />
+        <Route path = "/student/leaderboard" element = {<Leaderboard/>} />
+        <Route path = "/student/coding-stats" element = {<CodingStats/>} />
+        <Route path ='*' element = {<NotFound/>}/>
       </Routes>
     </Router>
   )

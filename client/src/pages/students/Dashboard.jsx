@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ChevronRight, Users, BookText, CheckCircle, X, AlertCircle } from 'lucide-react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
+import Home from './Home';
+import {getUserID} from '../../userID';
 
-const StudentDashboard = () => {
+const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({
     user : 'Student',
     performance: {},
@@ -15,9 +17,7 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const url = new URL(window.location.href);
-        const userID = url.searchParams.get('user');
-  
+        const userID = getUserID();
         let performance = await axios.post('/api/dashboard/getPerformanceData',{userID});
         performance = performance.data.message;
         let attendance = await axios.post('/api/dashboard/getAttendanceData',{userID});
@@ -122,20 +122,20 @@ const StudentDashboard = () => {
 
   if (dashboardData.loading) {
     return (
-      <div>
+      <Home>
         <div className="flex items-center justify-center h-full">
           <div className="animate-pulse flex flex-col items-center">
             <div className="h-12 w-12 rounded-full bg-primary-200"></div>
             <div className="mt-4 text-gray-500">Loading dashboard data...</div>
           </div>
         </div>
-      </div>
+      </Home>
     );
   }
 
   if (dashboardData.error) {
     return (
-      <div>
+      <Home>
         <div className="flex items-center justify-center h-full">
           <div className="text-center">
             <AlertCircle className="h-12 w-12 text-error-500 mx-auto" />
@@ -149,12 +149,12 @@ const StudentDashboard = () => {
             </button>
           </div>
         </div>
-      </div>
+      </Home>
     );
   }
 
   return (
-    <div>
+    <Home>
       {/* Welcome Message */}
       <div className="md:flex md:items-center md:justify-between mb-6">
         <div className="flex-1 min-w-0">
@@ -287,9 +287,9 @@ const StudentDashboard = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Home>
   );
 };
 
 
-export default StudentDashboard;
+export default Dashboard;

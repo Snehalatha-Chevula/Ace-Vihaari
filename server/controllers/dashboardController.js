@@ -2,7 +2,6 @@ const db = require("../models/db");
 
 exports.getPerformanceData = async(request, response)=>{
     const {userID} = request.body;
-    console.log(userID);
     try{
         const [rows] = await db.query(`SELECT * from academicInfo WHERE userID = ?`,[userID]);
         const {currentSem } = rows[0];

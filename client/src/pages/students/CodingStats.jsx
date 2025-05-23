@@ -1,12 +1,12 @@
 import React from 'react'
 import Home from './Home'
 
-const Notifications = () => {
+const CodingStats = () => {
   return (
     <Home>
-        This is Notification Page
+        This is Coding stats
     </Home>
   )
 }
 
-export default Notifications;
+export default CodingStats;

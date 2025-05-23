@@ -4,6 +4,7 @@ import InputField from "../components/InputField";
 import logo1 from "../assets/logo1.png";
 import {useNavigate} from "react-router-dom";
 import axios from 'axios';
+import {setUserID} from '../userID';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,9 +21,9 @@ const Login = () => {
     if (response.status === 200) {
       console.log('Login successful:', data);
       localStorage.setItem('token', data.token);
-
+      setUserID(data.user.userID);
       if (data.user.role === 'student') {
-        navigate(`/pages/student/home?user=${username}`);
+        navigate(`/student/dashboard`);
       } else if (data.user.role === 'faculty') {
         navigate(`/pages/faculty/home?user=${username}`);
       }
