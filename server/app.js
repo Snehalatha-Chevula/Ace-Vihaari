@@ -7,6 +7,7 @@ dotenv.config();
 
 const authRoutes = require('./routes/authRoute');
 const dashboardRoutes = require('./routes/dashboardRoute');
+const profileRoutes = require('./routes/profileRoute');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/profile',profileRoutes);
 app.get('/api/notes', async (req,res) => {
     try {
         let [notes] =await db.query(`SELECT * FROM notes`);
