@@ -3,7 +3,6 @@ import { ChevronRight, Users, BookText, CheckCircle, X, AlertCircle } from 'luci
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 import Home from './Home';
-import {getUserID} from '../../userID';
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({
@@ -17,7 +16,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const userID = getUserID();
+        const userDetails = JSON.parse(localStorage.getItem('user'));
+        const userID = userDetails.user.userID;
         let performance = await axios.post('/api/dashboard/getPerformanceData',{userID});
         performance = performance.data.message;
         let attendance = await axios.post('/api/dashboard/getAttendanceData',{userID});

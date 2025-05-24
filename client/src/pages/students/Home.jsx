@@ -4,11 +4,10 @@ import {
   LayoutDashboard, BookOpen, Trophy, Bell, UserCircle, 
   LogOut, Menu, X, ChevronDown, ChevronUp, Laptop
 } from 'lucide-react';
-import { getUserID} from '../../userID';
 import axios from 'axios';
 
 const Home = ({ children }) => {
-  const userID = getUserID();
+  const userID = JSON.parse(localStorage.getItem('user')).user.userID;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
