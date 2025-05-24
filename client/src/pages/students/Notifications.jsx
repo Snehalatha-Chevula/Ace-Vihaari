@@ -4,7 +4,7 @@ import Home from './Home'
 const Notifications = () => {
   return (
     <Home>
-        This is Notification Page
+        <p>This is Notification Page</p>
     </Home>
   )
 }
