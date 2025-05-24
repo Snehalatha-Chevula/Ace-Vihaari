@@ -4,15 +4,17 @@ import Dashboard from "./pages/students/Dashboard";
 import NotFound from "./pages/NotFound";
 import Notes from "./pages/students/Notes";
 import Notifications from "./pages/students/Notifications";
-import Profile from "./pages/students/profile";
+import Profile from "./pages/students/Profile";
 import Leaderboard from "./pages/students/Leaderboard";
 import CodingStats from "./pages/students/CodingStats";
+import { Toaster } from 'react-hot-toast';
 
 
 function App() {
 
   return (
     <Router>
+      <Toaster position="top-right" />
       <Routes>
         <Route path = "/" element = {<Login/>}/> 
         <Route path = "/student/dashboard" element = {<Dashboard/>} />

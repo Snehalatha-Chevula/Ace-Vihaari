@@ -17,8 +17,7 @@ const Home = ({ children }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    LogOut();
-    navigate('/login');
+    navigate('/');
   };
 
   const closeSidebar = () => {
@@ -110,11 +109,11 @@ const Home = ({ children }) => {
                     <span className="sr-only">Open user menu</span>
                     <div className="flex items-center">
                       <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium">
-                        {'U'}
+                        {userName?.charAt(0) || 'U'}
                       </div>
                       <span className="ml-2 hidden md:flex flex-col items-start">
                         <span className="text-sm font-medium text-gray-700">{userName}</span>
-                        <span className="text-xs text-gray-500">{userID}</span>
+                        <span className="text-xs text-gray-500">{userID.toUpperCase()}</span>
                       </span>
                       {dropdownOpen ? (
                         <ChevronUp className="ml-1 h-4 w-4 text-gray-500" />
@@ -127,7 +126,7 @@ const Home = ({ children }) => {
                 {dropdownOpen && (
                   <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <Link
-                      to="/profile"
+                      to="/student/profile"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setDropdownOpen(false)}
                     >
