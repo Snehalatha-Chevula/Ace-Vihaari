@@ -22,8 +22,13 @@ const LeaderboardPage = () => {
         const res = await axios.get(`/api/leaderboard/${leaderboardType}`);
         
         const data = res.data.message.rows;
+
+        const filteredData = data.filter(userData => {
+          return (filters.semester === 'all' || userData.semester == filters.semester) &&
+                                (filters.branch === 'all' || userData.branch === filters.branch);
+        });
         
-        setLeaderboardData(data);
+        setLeaderboardData(filteredData);
         setError(null);
       } catch (error) {
         console.error('Failed to fetch leaderboard data:', error);
@@ -34,7 +39,7 @@ const LeaderboardPage = () => {
     };
 
     fetchLeaderboardData();
-  }, [leaderboardType]);
+  }, [leaderboardType,filters]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -43,6 +48,8 @@ const LeaderboardPage = () => {
       [name]: value
     }));
   };
+
+
 
   // Layout based on user role
   //const Layout = user?.role === 'faculty' ? FacultyLayout : StudentLayout;
@@ -136,15 +143,15 @@ const LeaderboardPage = () => {
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             >
               <option value="all">All Branches</option>
-              <option value="cse">CSE</option>
-              <option value="ece">CSM</option>
-              <option value="me">IOT</option>
-              <option value="ce">CSD</option>
-              <option value="ee">IT</option>
-              <option value="me">ECE</option>
-              <option value="ce">EEE</option>
-              <option value="ee">CIVIL</option>
-              <option value="ee">MECH</option>
+              <option value="CSE">CSE</option>
+              <option value="CSM">CSM</option>
+              <option value="IOT">IOT</option>
+              <option value="CSD">CSD</option>
+              <option value="IT">IT</option>
+              <option value="ECE">ECE</option>
+              <option value="EEE">EEE</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="MECH">MECH</option>
             </select>
           </div>
         </div>
