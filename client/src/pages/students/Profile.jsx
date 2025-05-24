@@ -6,8 +6,12 @@ import {
 import { toast } from 'react-hot-toast';
 import Home from './Home';
 import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+
+
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
   const userID = JSON.parse(localStorage.getItem('user')).user.userID;
   const user = JSON.parse(localStorage.getItem('user')).user;
   const [profileData, setProfileData] = useState({
@@ -50,20 +54,31 @@ const ProfilePage = () => {
         academicInfo = academicInfo.data.message;
 
         let personalInfo = await axios.get(`/api/profile/getPersonalInfo/${userID}`);
-        personalInfo = personalInfo.data.message;
+        personalInfo = personalInfo.data.message.details;
 
-        // let codingProfiles = await axios.get(`/api/profile/getCodingProfiles/${userID}`);
-        // codingProfiles = codingProfiles.data.message;
+        let codingProfiles = await axios.get(`/api/profile/getCodingProfiles/${userID}`);
+        codingProfiles = codingProfiles.data.message.details;
 
         let cgpa = await axios.get(`/api/profile/getCGPA/${userID}`);
         cgpa = cgpa.data.message;
+        const data = {
+          name: personalInfo.fullName,
+          email: personalInfo.email,
+          phone: personalInfo.phone,
+          address: personalInfo.address,
+          bio: personalInfo.bio,
+          registrationNumber: userID.toUpperCase(),
+          cgpa: cgpa.currentCGPA,
+          semester: academicInfo.currentSem,
+          branch: academicInfo.branch,
+          githubUsername: codingProfiles.github,
+          leetcodeUsername: codingProfiles.leetcode,
+          gfgUsername: codingProfiles.gfg,
+          hackerrankUsername: codingProfiles.hackerrank,
+          codechefUsername: codingProfiles.codechef
+        }
 
-        console.log(academicInfo);
-        console.log(personalInfo);
-        console.log(codingProfiles);
-        console.log(cgpa);
-
-        let data = getMockProfileData('student')
+        //let data = getMockProfileData('student')
 
         
         setProfileData(data);
@@ -97,15 +112,9 @@ const ProfilePage = () => {
   const handleSaveProfile = async () => {
     try {
       setIsSaving(true);
-      
-      // In a real app, you would use:
-      // await updateProfile(profileData);
-      
-      // Mock save success
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setIsEditing(false);
+      await axios.put('/api/profile/updateDetails',profileData);
       toast.success('Profile updated successfully!');
+      setIsEditing(false);
     } catch (error) {
       console.error('Failed to update profile:', error);
       toast.error('Failed to update profile');
@@ -116,7 +125,6 @@ const ProfilePage = () => {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error('New passwords do not match');
       return;
@@ -124,13 +132,12 @@ const ProfilePage = () => {
     
     try {
       setIsSaving(true);
-      
-      // In a real app, you would use:
-      // await api.changePassword(passwordData);
-      
-      // Mock change password success
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const data = {
+        currentPassword : passwordData.currentPassword,
+        newPassword : passwordData.newPassword,
+        userID,
+      }
+      await axios.put('/api/profile/updatePassword',data);
       setIsChangingPassword(false);
       setPasswordData({
         currentPassword: '',
@@ -147,7 +154,7 @@ const ProfilePage = () => {
   };
 
   const handleLogout = () => {
-    logout();
+    navigate('/');
   };
 
   // Layout based on user role
@@ -194,11 +201,11 @@ const ProfilePage = () => {
                 <h2 className="text-xl font-bold text-gray-900">{profileData.name}</h2>
                 <p className="text-sm text-gray-500">
                   {user?.role === 'student' 
-                    ? `${profileData.branch} Student - ${profileData.semester}` 
+                    ? `Branch : ${profileData.branch}` 
                     : `${profileData.designation} - ${profileData.department}`}
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
-                  ID: {profileData.registrationNumber}
+                  ID: {profileData.registrationNumber.toUpperCase()}
                 </p>
               </div>
             </div>
@@ -335,14 +342,14 @@ const ProfilePage = () => {
                     <textarea
                       name="bio"
                       id="bio"
-                      rows="4"
+                      rows="14"
                       value={profileData.bio}
                       onChange={handleProfileChange}
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 pl-2 pr-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       placeholder="Tell us about yourself"
                     ></textarea>
                   ) : (
-                    <p className="mt-1 text-sm text-gray-900">{profileData.bio || "No bio provided"}</p>
+                    <p className="mt-1 text-sm text-gray-900 border-2 border-stone-200 rounded-lg h-70 pl-2 pr-2">{profileData.bio || "No bio provided"}</p>
                   )}
                 </div>
               </div>
@@ -371,23 +378,7 @@ const ProfilePage = () => {
                         <BookOpen className="inline-block h-5 w-5 mr-2 text-gray-500" />
                         Branch
                       </label>
-                      {isEditing ? (
-                        <select
-                          name="branch"
-                          id="branch"
-                          value={profileData.branch}
-                          onChange={handleProfileChange}
-                          className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        >
-                          <option value="Computer Science">Computer Science</option>
-                          <option value="Electronics">Electronics</option>
-                          <option value="Mechanical">Mechanical</option>
-                          <option value="Civil">Civil</option>
-                          <option value="Electrical">Electrical</option>
-                        </select>
-                      ) : (
-                        <p className="mt-1 text-sm text-gray-900">{profileData.branch}</p>
-                      )}
+                      <p className="mt-1 text-sm text-gray-900">{profileData.branch}</p>
                     </div>
                     
                     <div>
@@ -395,26 +386,7 @@ const ProfilePage = () => {
                         <BookOpen className="inline-block h-5 w-5 mr-2 text-gray-500" />
                         Current Semester
                       </label>
-                      {isEditing ? (
-                        <select
-                          name="semester"
-                          id="semester"
-                          value={profileData.semester}
-                          onChange={handleProfileChange}
-                          className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        >
-                          <option value="1st Semester">1st Semester</option>
-                          <option value="2nd Semester">2nd Semester</option>
-                          <option value="3rd Semester">3rd Semester</option>
-                          <option value="4th Semester">4th Semester</option>
-                          <option value="5th Semester">5th Semester</option>
-                          <option value="6th Semester">6th Semester</option>
-                          <option value="7th Semester">7th Semester</option>
-                          <option value="8th Semester">8th Semester</option>
-                        </select>
-                      ) : (
-                        <p className="mt-1 text-sm text-gray-900">{profileData.semester}</p>
-                      )}
+                      <p className="mt-1 text-sm text-gray-900">{profileData.semester}</p>
                     </div>
                     
                     <div>
@@ -639,7 +611,7 @@ const ProfilePage = () => {
                           <p className="mt-1 text-sm text-gray-900">
                             {profileData.codechefUsername ? (
                               <a 
-                                href={`https://codechef.com/${profileData.codechefUsername}`} 
+                                href={`https://codechef.com/users/${profileData.codechefUsername}`} 
                                 target="_blank" 
                                 rel="noreferrer"
                                 className="text-blue-600 hover:text-blue-700"
