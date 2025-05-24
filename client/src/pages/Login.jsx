@@ -56,7 +56,10 @@ const Login = () => {
                 </div>
                 <div className="flex flex-col md:flex-row justify-around items-center mb-5 mt-7">
                     <Button type='submit' text='Submit'/>
-                    <Button type='reset' text='Reset' />
+                    <Button type='reset' text='Reset' onClick={() => {
+                      setusername('');
+                      setpassword('');
+                    }}/>
                 </div>
                 <p className="mb-8 font-medium text-md text-blue-600">Forgot password ?</p>
                 <p className='text-sm'>Don't have account ? Contact <span className='text-blue-600 font-semibold'>Admin</span></p>
