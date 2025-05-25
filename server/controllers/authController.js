@@ -19,7 +19,7 @@ exports.loginUser = async(request, response) => {
             return response.status(404).json({message: 'Invalid Password' });
         }
 
-        const isfaculty = username.startsWith('F_') ? true : false;
+        const isfaculty = username.toLowerCase().startsWith('f_') ? true : false;
          
         const token = generateToken(username, isfaculty ? 'faculty' : 'student');
 

@@ -25,7 +25,7 @@ const Login = () => {
       if (data.user.role === 'student') {
         navigate(`/student/dashboard`);
       } else if (data.user.role === 'faculty') {
-        navigate(`/pages/faculty/home?user=${username}`);
+        navigate(`/faculty/dashboard`);
       }
     } else {
       alert(data.message);

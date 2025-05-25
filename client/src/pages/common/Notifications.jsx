@@ -1,8 +1,9 @@
-import Home from './Home'
 import React, { useState, useEffect } from 'react';
 import { Bell, CheckCircle, AlertCircle, Info, BookOpen, X, Calendar, Filter } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
+import StudentLayout from '../students/StudentLayout';
+import FacultyLayout from '../faculty/FacultyLayout';
 
 const NotificationsPage = () => {
   const user = JSON.parse(localStorage.getItem('user')).user;
@@ -88,10 +89,10 @@ const NotificationsPage = () => {
   );
 
   // Layout based on user role
-  //const Layout = user?.role === 'faculty' ? FacultyLayout : StudentLayout;
+  const Layout = user?.role === 'faculty' ? FacultyLayout : StudentLayout;
 
   return (
-    <Home>
+    <Layout>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
         <p className="text-gray-600 mt-1">Stay updated with important announcements and updates</p>
@@ -269,7 +270,7 @@ const NotificationsPage = () => {
           </div>
         )}
       </div>
-    </Home>
+    </Layout>
   );
 };
 

@@ -4,11 +4,10 @@ import {
   Key, LogOut, Camera, Save, Loader2, AtSign,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import Home from './Home';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
-
-
+import StudentLayout from '../students/StudentLayout';
+import FacultyLayout from '../faculty/FacultyLayout';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -158,10 +157,11 @@ const ProfilePage = () => {
   };
 
   // Layout based on user role
+  const Layout = user?.role === 'faculty' ? FacultyLayout : StudentLayout;
 
   if (isLoading) {
     return (
-      <Home>
+      <Layout>
         <div className="flex items-center justify-center h-full">
           <div className="animate-pulse flex flex-col items-center">
             <div className="h-24 w-24 rounded-full bg-gray-200"></div>
@@ -174,12 +174,12 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-      </Home>
+      </Layout>
     );
   }
 
   return (
-    <Home>
+    <Layout>
 
       <div className="bg-white shadow overflow-hidden rounded-lg">
         {/* Profile Header */}
@@ -771,7 +771,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </Home>
+    </Layout>
   );
 };
 

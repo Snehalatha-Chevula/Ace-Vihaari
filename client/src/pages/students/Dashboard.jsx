@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ChevronRight, Users, BookText, CheckCircle, X, AlertCircle } from 'lucide-react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
-import Home from './Home';
+import Home from './StudentLayout';
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({

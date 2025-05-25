@@ -10,6 +10,7 @@ const dashboardRoutes = require('./routes/dashboardRoute');
 const profileRoutes = require('./routes/profileRoute');
 const leaderboardRoutes = require('./routes/leaderboardRoute');
 const notificationRoutes = require('./routes/notificationsRoute');
+const notesRoutes = require('./routes/notesRoute');
 
 const app = express();
 
@@ -21,17 +22,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/profile',profileRoutes);
 app.use('/api/leaderboard',leaderboardRoutes);
 app.use('/api/notifications',notificationRoutes);
-
-app.get('/api/notes', async (req,res) => {
-    try {
-        let [notes] =await db.query(`SELECT * FROM notes`);
-        return res.status(200).json(notes);
-    }
-    catch(e){
-        console.log('Unable to fetch notes',e);
-        res.status(500);
-    }
-});
+app.use('/api/notes',notesRoutes);
 
 
 const PORT = process.env.PORT || 5000;

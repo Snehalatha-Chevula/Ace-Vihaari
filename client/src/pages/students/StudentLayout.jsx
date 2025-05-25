@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-const Home = ({ children }) => {
+const StudentLayout = ({ children }) => {
   const userID = JSON.parse(localStorage.getItem('user')).user.userID;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -146,7 +146,7 @@ const Home = ({ children }) => {
         </div>
       </header>
 
-      <div className="flex flex-1 h-screen overflow-hidden">
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar Overlay */}
         <div
           className={`fixed inset-0 bg-gray-600 bg-opacity-75 z-40 md:hidden transition-opacity duration-300 ease-in-out ${
@@ -157,7 +157,7 @@ const Home = ({ children }) => {
 
         {/* Sidebar */}
         <div
-          className={`fixed md:sticky top-0 inset-y-0 left-0 flex h-screen flex-col w-64 max-w-64 pt-5 pb-4 bg-white border-r border-gray-200 transform md:translate-x-0 transition duration-300 ease-in-out z-40 ${
+          className={`fixed md:sticky top-0 inset-y-0 left-0 flex flex-col w-64 max-w-64 pt-5 pb-4 bg-white border-r border-gray-200 transform md:translate-x-0 transition duration-300 ease-in-out z-40 ${
              sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -196,7 +196,19 @@ const Home = ({ children }) => {
               </nav>
             </div>
           </div>
+
+          {/* Logout Button */}
+          <div className="flex-shrink-0 p-2 border-t border-gray-200">
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center w-full px-4 py-2 text-sm text-gray-600 rounded-md hover:bg-red-50 hover:text-red-600"
+            >
+              <LogOut className="mr-3 h-5 w-5" />
+              Sign out
+            </button>
+          </div>
         </div>
+
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto bg-gray-50">
@@ -209,4 +221,4 @@ const Home = ({ children }) => {
   );
 };
 
-export default Home;
+export default StudentLayout;

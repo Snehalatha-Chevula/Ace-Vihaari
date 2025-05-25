@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Medal, Award, TrendingUp, Filter } from 'lucide-react';
+import { Trophy, Medal, Award, Filter } from 'lucide-react';
 import axios from 'axios';
-import  Home  from './Home';
+import StudentLayout from '../students/StudentLayout';
+import FacultyLayout from '../faculty/FacultyLayout';
+
 const LeaderboardPage = () => {
   const userID = JSON.parse(localStorage.getItem('user')).user.userID;
   const user = JSON.parse(localStorage.getItem('user')).user;
@@ -52,10 +54,10 @@ const LeaderboardPage = () => {
 
 
   // Layout based on user role
-  //const Layout = user?.role === 'faculty' ? FacultyLayout : StudentLayout;
+  const Layout = user?.role === 'faculty' ? FacultyLayout : StudentLayout;
 
   return (
-    <Home>
+    <Layout>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Leaderboard</h1>
         <p className="text-gray-600 mt-1">View top performers across different categories</p>
@@ -274,7 +276,7 @@ const LeaderboardPage = () => {
           </>
         )}
       </div>
-    </Home>
+    </Layout>
   );
 };
 

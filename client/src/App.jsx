@@ -2,12 +2,14 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Login from "./pages/Login"
 import Dashboard from "./pages/students/Dashboard";
 import NotFound from "./pages/NotFound";
-import Notes from "./pages/students/Notes";
-import Notifications from "./pages/students/Notifications";
-import Profile from "./pages/students/Profile";
-import Leaderboard from "./pages/students/Leaderboard";
+import Notes from "./pages/common/Notes";
+import Notifications from "./pages/common/Notifications";
+import ProfilePage from "./pages/common/Profile";
+import LeaderboardPage from "./pages/common/Leaderboard";
 import CodingStats from "./pages/students/CodingStats";
+import Attendance from "./pages/faculty/attendance";
 import { Toaster } from 'react-hot-toast';
+import FacultyDashboard from "./pages/faculty/Dashboard";
 
 
 function App() {
@@ -20,10 +22,18 @@ function App() {
         <Route path = "/student/dashboard" element = {<Dashboard/>} />
         <Route path = "/student/notes" element = {<Notes/>} />
         <Route path = "/student/notifications" element = {<Notifications/>} />
-        <Route path = "/student/profile" element = {<Profile/>} />
-        <Route path = "/student/leaderboard" element = {<Leaderboard/>} />
+        <Route path = "/student/profile" element = {<ProfilePage/>} />
+        <Route path = "/student/leaderboard" element = {<LeaderboardPage/>} />
         <Route path = "/student/coding-stats" element = {<CodingStats/>} />
         <Route path ='*' element = {<NotFound/>}/>
+
+        <Route path = "/faculty/dashboard" element = {<FacultyDashboard/>} />
+        <Route path = "/faculty/notes" element = {<Notes/>} />
+        <Route path = "/faculty/notifications" element = {<Notifications/>} />
+        <Route path = "/faculty/profile" element = {<ProfilePage/>} />
+        <Route path = "/faculty/leaderboard" element = {<LeaderboardPage/>} />
+        <Route path = "/faculty/attendance" element = {<Attendance/>} />
+
       </Routes>
     </Router>
   )

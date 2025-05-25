@@ -3,11 +3,13 @@ import {
   BookOpen, Search, Filter, Download, FileText, Plus, X,
   FilePlus, Loader2, ListFilter, SortAsc, SortDesc, FileUp
 } from 'lucide-react';
-import Home from './Home';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import FacultyLayout from '../faculty/FacultyLayout';
+import StudentLayout from '../students/StudentLayout';
 
 const Notes = () => {
+  const user = JSON.parse(localStorage.getItem('user')).user;
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +32,7 @@ const Notes = () => {
     const fetchNotes = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/notes');
+        const response = await axios.get(`/api/notes/getNotes/${user.userID}`);
         let data = response.data;
         setNotes(data);
         setError(null);
@@ -153,12 +155,12 @@ const Notes = () => {
 
 
   // Layout based on user role
-  let user = {
-    role : 'student',
-  };
+  
+
+  const Layout = user?.role == 'student' ? StudentLayout : FacultyLayout;
 
   return (
-    <Home>
+    <Layout>
       <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Notes & Resources</h1>
@@ -386,7 +388,7 @@ const Notes = () => {
       {uploadModalOpen && (
         <div className="fixed z-50 inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div className="fixed inset-0 transition-opacity pointer-events-none" aria-hidden="true">
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
@@ -395,8 +397,8 @@ const Notes = () => {
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <FilePlus className="h-6 w-6 text-blue-600" />
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-primary-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <FilePlus className="h-6 w-6 text-primary-600" />
                   </div>
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">Upload Resource</h3>
@@ -416,7 +418,7 @@ const Notes = () => {
                           value={uploadFormData.title}
                           onChange={handleUploadFormChange}
                           required
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
 
@@ -428,11 +430,35 @@ const Notes = () => {
                           type="text"
                           name="subject"
                           id="subject"
-                          value={uploadFormData.NotesSubject}
+                          value={uploadFormData.subject}
                           onChange={handleUploadFormChange}
                           required
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
+                      </div>
+
+                      <div className="mb-4">
+                        <label htmlFor="semester" className="block text-sm font-medium text-gray-700">
+                          Semester
+                        </label>
+                        <select
+                          id="semester"
+                          name="semester"
+                          value={uploadFormData.semester}
+                          onChange={handleUploadFormChange}
+                          required
+                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+                        >
+                          <option value="">Select Semester</option>
+                          <option value="1st Semester">1st Semester</option>
+                          <option value="2nd Semester">2nd Semester</option>
+                          <option value="3rd Semester">3rd Semester</option>
+                          <option value="4th Semester">4th Semester</option>
+                          <option value="5th Semester">5th Semester</option>
+                          <option value="6th Semester">6th Semester</option>
+                          <option value="7th Semester">7th Semester</option>
+                          <option value="8th Semester">8th Semester</option>
+                        </select>
                       </div>
 
                       <div className="mb-4">
@@ -443,9 +469,9 @@ const Notes = () => {
                           id="description"
                           name="description"
                           rows="3"
-                          value={uploadFormData.Notesdescription}
+                          value={uploadFormData.description}
                           onChange={handleUploadFormChange}
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         ></textarea>
                       </div>
 
@@ -457,7 +483,7 @@ const Notes = () => {
                           <div className="space-y-1 text-center">
                             <FileUp className="mx-auto h-12 w-12 text-gray-400" />
                             <div className="flex text-sm text-gray-600">
-                              <label htmlFor="file" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                              <label htmlFor="file" className="relative cursor-pointer bg-white rounded-md font-medium text-primary-600 hover:text-primary-500 focus-within:outline-none">
                                 <span>Upload a file</span>
                                 <input id="file" name="file" type="file" onChange={handleUploadFormChange} className="sr-only" />
                               </label>
@@ -483,7 +509,7 @@ const Notes = () => {
                   type="button"
                   onClick={handleUpload}
                   disabled={uploadFormData.isUploading}
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
                   {uploadFormData.isUploading ? (
                     <>
@@ -498,7 +524,7 @@ const Notes = () => {
                   type="button"
                   onClick={() => setUploadModalOpen(false)}
                   disabled={uploadFormData.isUploading}
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >
                   Cancel
                 </button>
@@ -507,7 +533,7 @@ const Notes = () => {
           </div>
         </div>
       )}
-    </Home>
+    </Layout>
   );
 };
 
