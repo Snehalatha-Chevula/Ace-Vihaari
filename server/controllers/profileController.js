@@ -4,17 +4,31 @@ const bcrypt = require('bcrypt');
 exports.getAcademicInfo = async (req,res) => {
     const userID = req.params.userID;
     try {
-        const [rows] = await db.query(`SELECT * FROM academicInfo WHERE userID = ? `,[userID]);
-        const {branch,currentSem} = rows[0];
-        return res.status(200).json({
-            message : {
-                branch,
-                currentSem
-            }
-        });
+        const role = userID.toLowerCase().charAt(0) == 'f' ? 'faculty' : 'student';
+        if(role == 'student'){
+            const [rows] = await db.query(`SELECT * FROM academicInfo WHERE userID = ? `,[userID]);
+            const {branch,currentSem} = rows[0];
+            return res.status(200).json({
+                message : {
+                    branch,
+                    currentSem
+                }
+            });
+        }
+        else{
+            const [rows] = await db.query(`Select * FROM facultyAcademicInfo WHERE registrationNumber = ?`, [userID]);
+            const {designation,department,specialization} = rows[0];
+            return res.status(200).json({
+                message : {
+                    designation,
+                    department,
+                    specialization
+                }
+            });
+        }
     }
     catch (e) {
-        console('Error while loading academic info',e);
+        console.log('Error while loading academic info',e);
         return res.status(500).json({message : 'Server Error'});
     }
 };
@@ -78,6 +92,7 @@ exports.getCodingProfiles = async (req,res) => {
 exports.updateDetails = async (req,res) => {
     const details = req.body;
     try {
+        const role = details.registrationNumber.toLowerCase().charAt(0) == 'f' ? 'faculty' : 'student'; 
         await db.query(
             'UPDATE personalInfo SET fullName = ?, email = ?, phone = ?, address = ?, bio = ? WHERE userID = ?',
             [details.name, details.email, details.phone, details.address, details.bio, details.registrationNumber],
@@ -86,15 +101,26 @@ exports.updateDetails = async (req,res) => {
                 if (result.affectedRows === 0) return res.status(404).json({message : 'User not found'});
             }
         );
-
-        await db.query(
-            'UPDATE codingprofiles SET leetcode = ?, codechef = ?, hackerrank = ?, gfg = ?, github = ? WHERE userID = ?',
-            [details.leetcodeUsername, details.codechefUsername, details.hackerrankUsername, details.gfgUsername, details.githubUsername, details.registrationNumber],
-            (err, result) => {
-                if (err) return res.status(500).json(err);
-                if (result.affectedRows === 0) return res.status(404).json({message : 'User not found'});
-            }
-        );
+        if(role == 'student'){
+            await db.query(
+                'UPDATE codingprofiles SET leetcode = ?, codechef = ?, hackerrank = ?, gfg = ?, github = ? WHERE userID = ?',
+                [details.leetcodeUsername, details.codechefUsername, details.hackerrankUsername, details.gfgUsername, details.githubUsername, details.registrationNumber],
+                (err, result) => {
+                    if (err) return res.status(500).json(err);
+                    if (result.affectedRows === 0) return res.status(404).json({message : 'User not found'});
+                }
+            );
+        }
+        else{
+            await db.query(
+                'UPDATE facultyAcademicInfo SET designation = ?, department = ?, specialization = ?',
+                [details.designation, details.department, details.specialization],
+                (err, result) => {
+                    if (err) return res.status(500).json(err);
+                    if (result.affectedRows === 0) return res.status(404).json({message : 'User not found'});
+                }
+            );
+        }
 
         res.status(200).json({message : 'Profile updated successfully'});
     }
