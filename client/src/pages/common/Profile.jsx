@@ -55,26 +55,43 @@ const ProfilePage = () => {
         let personalInfo = await axios.get(`/api/profile/getPersonalInfo/${userID}`);
         personalInfo = personalInfo.data.message.details;
 
-        let codingProfiles = await axios.get(`/api/profile/getCodingProfiles/${userID}`);
-        codingProfiles = codingProfiles.data.message.details;
+        let role = userID.toLowerCase().charAt(0) == 'f' ? 'faculty' : 'student';
+        let data;
+        if(role == 'student'){
+          let codingProfiles = await axios.get(`/api/profile/getCodingProfiles/${userID}`);
+          codingProfiles = codingProfiles.data.message.details;
 
-        let cgpa = await axios.get(`/api/profile/getCGPA/${userID}`);
-        cgpa = cgpa.data.message;
-        const data = {
-          name: personalInfo.fullName,
-          email: personalInfo.email,
-          phone: personalInfo.phone,
-          address: personalInfo.address,
-          bio: personalInfo.bio,
-          registrationNumber: userID.toUpperCase(),
-          cgpa: cgpa.currentCGPA,
-          semester: academicInfo.currentSem,
-          branch: academicInfo.branch,
-          githubUsername: codingProfiles.github,
-          leetcodeUsername: codingProfiles.leetcode,
-          gfgUsername: codingProfiles.gfg,
-          hackerrankUsername: codingProfiles.hackerrank,
-          codechefUsername: codingProfiles.codechef
+          let cgpa = await axios.get(`/api/profile/getCGPA/${userID}`);
+          cgpa = cgpa.data.message;
+          data = {
+            name: personalInfo.fullName,
+            email: personalInfo.email,
+            phone: personalInfo.phone,
+            address: personalInfo.address,
+            bio: personalInfo.bio,
+            registrationNumber: userID.toUpperCase(),
+            cgpa: cgpa.currentCGPA,
+            semester: academicInfo.currentSem,
+            branch: academicInfo.branch,
+            githubUsername: codingProfiles.github,
+            leetcodeUsername: codingProfiles.leetcode,
+            gfgUsername: codingProfiles.gfg,
+            hackerrankUsername: codingProfiles.hackerrank,
+            codechefUsername: codingProfiles.codechef
+          }
+        }
+        else{
+          data = {
+            name: personalInfo.fullName,
+            email: personalInfo.email,
+            phone: personalInfo.phone,
+            address: personalInfo.address,
+            bio: personalInfo.bio,
+            registrationNumber: userID.toUpperCase(),
+            designation: academicInfo.designation,
+            department: academicInfo.department,
+            specialization: academicInfo.specialization
+          }
         }
 
         //let data = getMockProfileData('student')
