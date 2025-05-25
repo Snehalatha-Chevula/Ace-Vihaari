@@ -9,6 +9,7 @@ const authRoutes = require('./routes/authRoute');
 const dashboardRoutes = require('./routes/dashboardRoute');
 const profileRoutes = require('./routes/profileRoute');
 const leaderboardRoutes = require('./routes/leaderboardRoute');
+const notificationRoutes = require('./routes/notificationsRoute');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/profile',profileRoutes);
 app.use('/api/leaderboard',leaderboardRoutes);
+app.use('/api/notifications',notificationRoutes);
 
 app.get('/api/notes', async (req,res) => {
     try {
