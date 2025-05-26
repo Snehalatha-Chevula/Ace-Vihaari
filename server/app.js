@@ -11,7 +11,6 @@ const profileRoutes = require('./routes/profileRoute');
 const leaderboardRoutes = require('./routes/leaderboardRoute');
 const notificationRoutes = require('./routes/notificationsRoute');
 const notesRoutes = require('./routes/notesRoute');
-const uploadRoutes = require('./routes/uploadRoute');
 
 const app = express();
 
@@ -24,7 +23,6 @@ app.use('/api/profile',profileRoutes);
 app.use('/api/leaderboard',leaderboardRoutes);
 app.use('/api/notifications',notificationRoutes);
 app.use('/api/notes',notesRoutes);
-app.use('/api',uploadRoutes);
 
 
 const PORT = process.env.PORT || 5000;

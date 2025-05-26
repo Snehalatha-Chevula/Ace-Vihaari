@@ -8,23 +8,23 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
 const users = [
   {
     username: 'S_22AG1A6677',
-    password: 'Sneha@{1521}',
+    password: '15',
   },
   {
     username: 'S_22AG1A6692',
-    password: 'Rajesh@{2003}',
+    password: '30',
   },
   {
     username: 'S_22AG1A66B5',
-    password: 'Pandhi@{gunna1}',
+    password: '2',
   },
   {
     username: 'F_1',
-    password: '123',
+    password: '1',
   },
   {
     username: 'F_2',
-    password: '456',
+    password: '2',
   }
 ];
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  BookOpen, Search, Filter, Download, FileText, Plus, X,
+  BookOpen, Search, Filter, Eye, FileText, Plus, X,
   FilePlus, Loader2, ListFilter, SortAsc, SortDesc, FileUp
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -82,9 +82,14 @@ const Notes = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    
-    if (!uploadFormData.file) {
-      toast.error('Please select a file to upload');
+
+    if (
+      !uploadFormData.title ||
+      !uploadFormData.subject ||
+      !uploadFormData.description ||
+      !uploadFormData.file
+    ) {
+      toast.error("Please fill all fields and upload a file.");
       return;
     }
     
@@ -92,21 +97,38 @@ const Notes = () => {
       setUploadFormData(prev => ({ ...prev, isUploading: true }));
       
       const formData = new FormData();
+
+      const userID = user.userID
+
+      let userName = await axios.post('/api/dashboard/getUserName',{userID});
+      userName = userName.data.message.fullName;
+
       formData.append('file', uploadFormData.file);
 
-      let response = await axios.post('/api/upload',formData);
+      let response = await axios.post('/api/notes/uploadToDrive',formData);
 
-      const data = await response.data;
-      console.log(data);
 
-      if (response.ok) {
+      const data = response.data;
+      const details = {
+        title : uploadFormData.title,
+        description : uploadFormData.description,
+        subject : uploadFormData.subject,
+        fileType : data.metadata.format,
+        size : data.metadata.sizeInMB,
+        uploadedBy : userName,
+        url : data.file.webViewLink,
+        facultyID : userID
+      }
+
+      response = await axios.post('/api/notes/uploadToDatabase', details);
+
+      if (response.status == 200) {
         toast.success('Note uploaded successfully!');
         setUploadModalOpen(false);
         setUploadFormData({
           title: '',
           subject: '',
           description: '',
-          semester: '',
           file: null,
           isUploading: false,
         });
@@ -158,6 +180,13 @@ const Notes = () => {
   const subjects = [...new Set(notes.map(note => note.NotesSubject))];
   const fileTypes = [...new Set(notes.map(note => note.fileType))];
 
+
+  const handleViewButton = async(noteID) => {
+    const res = await axios.post('/api/notes/incrementView',{noteID});
+    let response = await axios.get(`/api/notes/getNotes/${user.userID}`);
+    const newData = response.data;
+    setNotes(newData);
+  }
 
   // Layout based on user role
   
@@ -344,7 +373,7 @@ const Notes = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
             {sortedNotes.map((note, index) => (
-              <div key={index} className="bg-white overflow-hidden border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div key={index} className="bg-white overflow-hidden border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
                 <div className="px-4 pt-4 flex justify-between items-start">
                   <div className={`p-2 rounded-md ${getFileTypeColor(note.fileType)}`}>
                    {getFileTypeIcon(note.fileType)}
@@ -363,27 +392,29 @@ const Notes = () => {
                       </span>
                     </div>
                     <div className="text-sm text-gray-500">
-                      {note.size}
+                      {note.size } MB
                     </div>
                   </div>
                 </div>
                 <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
                   <div className="text-sm text-gray-500">
-                    <span className="font-medium">{note.downloads}</span> downloads
+                    <span className="font-medium">{note.viewcnt}</span> views
                   </div>
-                  <button 
-                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    <Download className="h-4 w-4 mr-1" />
-                    Download
-                  </button>
+                  <a href={`${note['url']}`} target='_blank'>
+                    <button onClick={() => handleViewButton(note.id)}
+                      className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      <Eye className="h-4 w-4 mr-1" />
+                        View
+                    </button>
+                  </a>
                 </div>
                 {note.uploadedBy && (
                   <div className="px-4 py-2 border-t border-gray-200 text-xs text-gray-500">
                     Uploaded by {note.uploadedBy}
                   </div>
                 )}
-              </div>
+                </div>
             ))}
           </div>
         )}
@@ -440,30 +471,6 @@ const Notes = () => {
                           required
                           className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
-                      </div>
-
-                      <div className="mb-4">
-                        <label htmlFor="semester" className="block text-sm font-medium text-gray-700">
-                          Semester
-                        </label>
-                        <select
-                          id="semester"
-                          name="semester"
-                          value={uploadFormData.semester}
-                          onChange={handleUploadFormChange}
-                          required
-                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                        >
-                          <option value="">Select Semester</option>
-                          <option value="1st Semester">1st Semester</option>
-                          <option value="2nd Semester">2nd Semester</option>
-                          <option value="3rd Semester">3rd Semester</option>
-                          <option value="4th Semester">4th Semester</option>
-                          <option value="5th Semester">5th Semester</option>
-                          <option value="6th Semester">6th Semester</option>
-                          <option value="7th Semester">7th Semester</option>
-                          <option value="8th Semester">8th Semester</option>
-                        </select>
                       </div>
 
                       <div className="mb-4">
