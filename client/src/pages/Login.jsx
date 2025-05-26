@@ -20,6 +20,7 @@ const Login = () => {
     const data = response.data;
 
     if (response.status === 200) {
+      localStorage.removeItem('userName');
       console.log('Login successful:');
       localStorage.setItem('user', JSON.stringify(data));
       if (data.user.role === 'student') {
@@ -69,4 +70,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Login;
