@@ -91,26 +91,31 @@ const Notes = () => {
     try {
       setUploadFormData(prev => ({ ...prev, isUploading: true }));
       
-      // In a real app, you would use:
-      // await api.uploadNote(uploadFormData);
-      
-      // Mock upload success
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast.success('Note uploaded successfully!');
-      setUploadModalOpen(false);
-      setUploadFormData({
-        title: '',
-        subject: '',
-        description: '',
-        semester: '',
-        file: null,
-        isUploading: false,
-      });
-      
+      const formData = new FormData();
+      formData.append('file', uploadFormData.file);
+
+      let response = await axios.post('/api/upload',formData);
+
+      const data = await response.data;
+      console.log(data);
+
+      if (response.ok) {
+        toast.success('Note uploaded successfully!');
+        setUploadModalOpen(false);
+        setUploadFormData({
+          title: '',
+          subject: '',
+          description: '',
+          semester: '',
+          file: null,
+          isUploading: false,
+        });
+      } 
       // Refresh notes list
-      const newData = getMockNotesData();
+      response = await axios.get(`/api/notes/getNotes/${user.userID}`);
+      const newData = response.data;
       setNotes(newData);
+
     } catch (error) {
       console.error('Failed to upload note:', error);
       toast.error('Failed to upload note. Please try again.');
