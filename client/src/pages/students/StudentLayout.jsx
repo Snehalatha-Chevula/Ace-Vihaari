@@ -61,7 +61,12 @@ const StudentLayout = ({ children }) => {
   useEffect(() => {
     const fetchData = async ()=> {
       try {
+        if(localStorage.getItem('userName')){
+          setUserName(localStorage.getItem('userName'));
+          return;
+        }
         let user = await axios.post('/api/dashboard/getUserName',{userID});
+        localStorage.setItem('userName',user.data.message.fullName);
         setUserName(user.data.message.fullName);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -73,7 +78,7 @@ const StudentLayout = ({ children }) => {
     fetchData();
   },[]);
   if(loading){
-    return <p>Loading...</p>
+    return <></>
   }
   return (
     <div className="h-screen flex flex-col overflow-hidden">

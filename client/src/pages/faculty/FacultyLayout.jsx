@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { 
   LayoutDashboard, BookOpen, Users, Trophy, Bell, UserCircle, 
   LogOut, Menu, X, ChevronDown, ChevronUp, ClipboardCheck
 } from 'lucide-react';
 
 const FacultyLayout = ({ children }) => {
+  const userID = JSON.parse(localStorage.getItem('user')).user.userID;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState('Faculty');
+  const [Loading,setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -57,7 +61,30 @@ const FacultyLayout = ({ children }) => {
     },
   ];
 
+  useEffect(() => {
+    const fetchData = async ()=> {
+      try {
+        if(localStorage.getItem('userName')){
+          setUserName(localStorage.getItem('userName'));
+          return ;
+        }
+        let user = await axios.post('/api/dashboard/getUserName',{userID});
+        localStorage.setItem('userName',user.data.message.fullName);
+        setUserName(user.data.message.fullName);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+      finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  },[]);
+
   const isActive = (path) => location.pathname === path;
+
+  if(Loading)
+    return (<></>);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -69,14 +96,14 @@ const FacultyLayout = ({ children }) => {
             <div className="flex">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
               >
                 <span className="sr-only">Open sidebar</span>
                 <Menu className="h-6 w-6" />
               </button>
               <div className="flex-shrink-0 flex items-center">
                 <Link to="/faculty/dashboard" className="flex items-center">
-                  <BookOpen className="h-8 w-8 text-primary-600" />
+                  <BookOpen className="h-8 w-8 text-blue-600" />
                   <span className="ml-2 text-xl font-bold text-gray-900">AceVihaari</span>
                 </Link>
               </div>
@@ -88,16 +115,16 @@ const FacultyLayout = ({ children }) => {
                 <div>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                    className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     <span className="sr-only">Open user menu</span>
                     <div className="flex items-center">
-                      <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-medium">
-                        {'F'}
+                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium">
+                        {userName.charAt(0).toUpperCase() || 'U'}
                       </div>
                       <span className="ml-2 hidden md:flex flex-col items-start">
-                        <span className="text-sm font-medium text-gray-700">{'Faculty'}</span>
-                        <span className="text-xs text-gray-500">{ 'Faculty ID'}</span>
+                        <span className="text-sm font-medium text-gray-700">{userName}</span>
+                        <span className="text-xs text-gray-500">{ userID.toUpperCase()}</span>
                       </span>
                       {dropdownOpen ? (
                         <ChevronUp className="ml-1 h-4 w-4 text-gray-500" />
@@ -167,11 +194,11 @@ const FacultyLayout = ({ children }) => {
                     onClick={closeSidebar}
                     className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
                       isActive(item.path)
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-gray-600 hover:bg-primary-50 hover:text-primary-600'
+                        ? 'bg-blue-50 text-blue-600'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
                     }`}
                   >
-                    <div className={`mr-3 ${isActive(item.path) ? 'text-primary-600' : 'text-gray-500 group-hover:text-primary-600'}`}>
+                    <div className={`mr-3 ${isActive(item.path) ? 'text-blue-600' : 'text-gray-500 group-hover:text-blue-600'}`}>
                       {item.icon}
                     </div>
                     {item.name}

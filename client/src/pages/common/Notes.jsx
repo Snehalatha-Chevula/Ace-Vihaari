@@ -182,6 +182,8 @@ const Notes = () => {
 
 
   const handleViewButton = async(noteID) => {
+    if(user?.role == 'faculty')
+      return;
     const res = await axios.post('/api/notes/incrementView',{noteID});
     let response = await axios.get(`/api/notes/getNotes/${user.userID}`);
     const newData = response.data;
