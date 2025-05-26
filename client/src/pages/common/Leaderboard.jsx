@@ -280,48 +280,6 @@ const LeaderboardPage = () => {
   );
 };
 
-// Mock data for development
-function getMockLeaderboardData(type) {
-  if (type === 'cgpa') {
-    return [
-      { name: 'Emma Johnson', branch: 'CSE', semester: '5th', cgpa: 9.82, trend: [9.2, 9.4, 9.6, 9.7, 9.82], trendDirection: 'up', lastChange: '+0.12' },
-      { name: 'Alex Chen', branch: 'CSE', semester: '5th', cgpa: 9.75, trend: [9.3, 9.5, 9.6, 9.7, 9.75], trendDirection: 'up', lastChange: '+0.05' },
-      { name: 'Sophia Martinez', branch: 'ECE', semester: '7th', cgpa: 9.68, trend: [9.4, 9.5, 9.55, 9.6, 9.68], trendDirection: 'up', lastChange: '+0.08' },
-      { name: 'James Wilson', branch: 'CSE', semester: '5th', cgpa: 9.64, trend: [9.7, 9.65, 9.6, 9.62, 9.64], trendDirection: 'up', lastChange: '+0.02' },
-      { name: 'Ava Thompson', branch: 'ME', semester: '5th', cgpa: 9.61, trend: [9.65, 9.63, 9.62, 9.6, 9.61], trendDirection: 'up', lastChange: '+0.01' },
-      { name: 'Noah Williams', branch: 'CSE', semester: '7th', cgpa: 9.58, trend: [9.65, 9.62, 9.6, 9.59, 9.58], trendDirection: 'down', lastChange: '-0.01' },
-      { name: 'Isabella Brown', branch: 'ECE', semester: '5th', cgpa: 9.55, trend: [9.4, 9.45, 9.5, 9.52, 9.55], trendDirection: 'up', lastChange: '+0.03' },
-      { name: 'Liam Davis', branch: 'CE', semester: '7th', cgpa: 9.52, trend: [9.58, 9.56, 9.54, 9.53, 9.52], trendDirection: 'down', lastChange: '-0.01' },
-      { name: 'Mia Rodriguez', branch: 'CSE', semester: '5th', cgpa: 9.48, trend: [9.38, 9.42, 9.44, 9.46, 9.48], trendDirection: 'up', lastChange: '+0.02' },
-      { name: 'Ethan Garcia', branch: 'EE', semester: '7th', cgpa: 9.45, trend: [9.35, 9.38, 9.4, 9.42, 9.45], trendDirection: 'up', lastChange: '+0.03' },
-    ];
-  } else if (type === 'coding') {
-    return [
-      { name: 'Noah Williams', branch: 'CSE', semester: '7th', problemsSolved: 512, trend: [450, 468, 485, 498, 512], trendDirection: 'up', lastChange: '+14' },
-      { name: 'Emma Johnson', branch: 'CSE', semester: '5th', problemsSolved: 487, trend: [420, 440, 455, 470, 487], trendDirection: 'up', lastChange: '+17' },
-      { name: 'Liam Davis', branch: 'CE', semester: '7th', problemsSolved: 456, trend: [430, 438, 445, 450, 456], trendDirection: 'up', lastChange: '+6' },
-      { name: 'Sophia Martinez', branch: 'ECE', semester: '7th', problemsSolved: 432, trend: [410, 418, 425, 430, 432], trendDirection: 'up', lastChange: '+2' },
-      { name: 'Alex Chen', branch: 'CSE', semester: '5th', problemsSolved: 415, trend: [425, 422, 420, 418, 415], trendDirection: 'down', lastChange: '-3' },
-      { name: 'Isabella Brown', branch: 'ECE', semester: '5th', problemsSolved: 398, trend: [380, 385, 390, 395, 398], trendDirection: 'up', lastChange: '+3' },
-      { name: 'James Wilson', branch: 'CSE', semester: '5th', problemsSolved: 387, trend: [365, 370, 378, 382, 387], trendDirection: 'up', lastChange: '+5' },
-      { name: 'Mia Rodriguez', branch: 'CSE', semester: '5th', problemsSolved: 362, trend: [350, 355, 358, 360, 362], trendDirection: 'up', lastChange: '+2' },
-      { name: 'Ethan Garcia', branch: 'EE', semester: '7th', problemsSolved: 345, trend: [350, 348, 346, 345, 345], trendDirection: 'down', lastChange: '0' },
-      { name: 'Ava Thompson', branch: 'ME', semester: '5th', problemsSolved: 324, trend: [310, 315, 318, 322, 324], trendDirection: 'up', lastChange: '+2' },
-    ];
-  } else { // attendance
-    return [
-      { name: 'Sophia Martinez', branch: 'ECE', semester: '7th', attendance: 99.2, trend: [98.5, 98.8, 99.0, 99.1, 99.2], trendDirection: 'up', lastChange: '+0.1%' },
-      { name: 'Emma Johnson', branch: 'CSE', semester: '5th', attendance: 98.8, trend: [98.2, 98.4, 98.6, 98.7, 98.8], trendDirection: 'up', lastChange: '+0.1%' },
-      { name: 'Alex Chen', branch: 'CSE', semester: '5th', attendance: 98.5, trend: [98.3, 98.4, 98.4, 98.5, 98.5], trendDirection: 'up', lastChange: '0%' },
-      { name: 'Isabella Brown', branch: 'ECE', semester: '5th', attendance: 98.1, trend: [97.8, 97.9, 98.0, 98.0, 98.1], trendDirection: 'up', lastChange: '+0.1%' },
-      { name: 'James Wilson', branch: 'CSE', semester: '5th', attendance: 97.9, trend: [98.2, 98.1, 98.0, 97.9, 97.9], trendDirection: 'down', lastChange: '0%' },
-      { name: 'Liam Davis', branch: 'CE', semester: '7th', attendance: 97.4, trend: [97.6, 97.5, 97.5, 97.4, 97.4], trendDirection: 'down', lastChange: '0%' },
-      { name: 'Mia Rodriguez', branch: 'CSE', semester: '5th', attendance: 97.2, trend: [96.8, 96.9, 97.0, 97.1, 97.2], trendDirection: 'up', lastChange: '+0.1%' },
-      { name: 'Noah Williams', branch: 'CSE', semester: '7th', attendance: 96.8, trend: [97.0, 96.9, 96.9, 96.8, 96.8], trendDirection: 'down', lastChange: '0%' },
-      { name: 'Ava Thompson', branch: 'ME', semester: '5th', attendance: 96.5, trend: [96.2, 96.3, 96.4, 96.4, 96.5], trendDirection: 'up', lastChange: '+0.1%' },
-      { name: 'Ethan Garcia', branch: 'EE', semester: '7th', attendance: 96.2, trend: [96.0, 96.0, 96.1, 96.1, 96.2], trendDirection: 'up', lastChange: '+0.1%' },
-    ];
-  }
-}
+
 
 export default LeaderboardPage;

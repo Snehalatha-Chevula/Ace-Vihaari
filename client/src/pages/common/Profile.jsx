@@ -286,7 +286,7 @@ const ProfilePage = () => {
                       id="name"
                       value={profileData.name}
                       onChange={handleProfileChange}
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   ) : (
                     <p className="mt-1 text-sm text-gray-900">{profileData.name}</p>
@@ -305,7 +305,7 @@ const ProfilePage = () => {
                       id="email"
                       value={profileData.email}
                       onChange={handleProfileChange}
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   ) : (
                     <p className="mt-1 text-sm text-gray-900">{profileData.email}</p>
@@ -324,7 +324,7 @@ const ProfilePage = () => {
                       id="phone"
                       value={profileData.phone}
                       onChange={handleProfileChange}
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   ) : (
                     <p className="mt-1 text-sm text-gray-900">{profileData.phone || "Not provided"}</p>
@@ -343,7 +343,7 @@ const ProfilePage = () => {
                       rows="3"
                       value={profileData.address}
                       onChange={handleProfileChange}
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     ></textarea>
                   ) : (
                     <p className="mt-1 text-sm text-gray-900">{profileData.address || "Not provided"}</p>
@@ -362,11 +362,11 @@ const ProfilePage = () => {
                       rows="14"
                       value={profileData.bio}
                       onChange={handleProfileChange}
-                      className="mt-1 pl-2 pr-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 p-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       placeholder="Tell us about yourself"
                     ></textarea>
                   ) : (
-                    <p className="mt-1 text-sm text-gray-900 border-2 border-stone-200 rounded-lg h-70 pl-2 pr-2">{profileData.bio || "No bio provided"}</p>
+                    <pre className="font-sans mt-1 text-sm text-gray-900 border-2 border-stone-200 rounded-lg h-70 pl-2 pr-2 whitespace-pre-wrap">{profileData.bio || "No bio provided"}</pre>
                   )}
                 </div>
               </div>
@@ -437,7 +437,7 @@ const ProfilePage = () => {
                           id="designation"
                           value={profileData.designation}
                           onChange={handleProfileChange}
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       ) : (
                         <p className="mt-1 text-sm text-gray-900">{profileData.designation}</p>
@@ -480,7 +480,7 @@ const ProfilePage = () => {
                           id="specialization"
                           value={profileData.specialization}
                           onChange={handleProfileChange}
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       ) : (
                         <p className="mt-1 text-sm text-gray-900">{profileData.specialization}</p>
@@ -510,7 +510,7 @@ const ProfilePage = () => {
                               id="githubUsername"
                               value={profileData.githubUsername}
                               onChange={handleProfileChange}
-                              className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                              className="p-2 flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
                             />
                           </div>
                         ) : (
@@ -547,7 +547,7 @@ const ProfilePage = () => {
                               id="leetcodeUsername"
                               value={profileData.leetcodeUsername}
                               onChange={handleProfileChange}
-                              className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                              className="p-2 flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
                             />
                           </div>
                         ) : (
@@ -584,7 +584,7 @@ const ProfilePage = () => {
                               id="gfgUsername"
                               value={profileData.gfgUsername}
                               onChange={handleProfileChange}
-                              className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                              className="p-2 flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
                             />
                           </div>
                         ) : (
@@ -621,7 +621,7 @@ const ProfilePage = () => {
                               id="codechefUsername"
                               value={profileData.codechefUsername}
                               onChange={handleProfileChange}
-                              className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                              className="p-2 flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
                             />
                           </div>
                         ) : (
@@ -658,7 +658,7 @@ const ProfilePage = () => {
                               id="hackerrankUsername"
                               value={profileData.hackerrankUsername}
                               onChange={handleProfileChange}
-                              className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                              className="p-2 flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
                             />
                           </div>
                         ) : (
@@ -715,7 +715,7 @@ const ProfilePage = () => {
                       value={passwordData.currentPassword}
                       onChange={handlePasswordChange}
                       required
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
                   
@@ -730,7 +730,7 @@ const ProfilePage = () => {
                       value={passwordData.newPassword}
                       onChange={handlePasswordChange}
                       required
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
                   
@@ -745,7 +745,7 @@ const ProfilePage = () => {
                       value={passwordData.confirmPassword}
                       onChange={handlePasswordChange}
                       required
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
                   
@@ -792,36 +792,5 @@ const ProfilePage = () => {
   );
 };
 
-// Helper functions for mock data
-function getMockProfileData(role) {
-  if (role === 'student') {
-    return {
-      name: 'Alex Johnson',
-      email: 'alex.johnson@example.com',
-      phone: '+91 9876543210',
-      address: '123 College Road, Bangalore, Karnataka, India',
-      bio: 'Computer Science student passionate about web development and artificial intelligence. Looking to build innovative solutions for real-world problems.',
-      registrationNumber: 'S12345',
-      cgpa: '8.76',
-      semester: '5th Semester',
-      branch: 'Computer Science',
-      githubUsername: 'alexj',
-      leetcodeUsername: 'alex_johnson',
-      gfgUsername: 'alexjohnson',
-    };
-  } else { // faculty
-    return {
-      name: 'Dr. Sarah Williams',
-      email: 'sarah.williams@example.com',
-      phone: '+91 9876543211',
-      address: '456 Faculty Housing, University Campus, Bangalore, Karnataka, India',
-      bio: 'Associate Professor with 10+ years of experience in teaching and research. Specializing in artificial intelligence and machine learning algorithms.',
-      registrationNumber: 'F54321',
-      designation: 'Associate Professor',
-      department: 'Computer Science',
-      specialization: 'Artificial Intelligence & Machine Learning',
-    };
-  }
-}
 
 export default ProfilePage;

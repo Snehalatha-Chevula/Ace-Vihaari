@@ -25,24 +25,14 @@ const FacultyLayout = ({ children }) => {
 
   const navigationItems = [
     { 
-      name: 'Dashboard', 
-      path: '/faculty/dashboard', 
-      icon: <LayoutDashboard className="h-5 w-5" /> 
-    },
-    { 
-      name: 'Students', 
-      path: '/faculty/students', 
-      icon: <Users className="h-5 w-5" /> 
+      name: 'Profile', 
+      path: '/faculty/profile', 
+      icon: <UserCircle className="h-5 w-5" /> 
     },
     { 
       name: 'Notes & Resources', 
       path: '/faculty/notes', 
       icon: <BookOpen className="h-5 w-5" /> 
-    },
-    { 
-      name: 'Attendance', 
-      path: '/faculty/attendance', 
-      icon: <ClipboardCheck className="h-5 w-5" /> 
     },
     { 
       name: 'Leaderboard', 
@@ -55,9 +45,9 @@ const FacultyLayout = ({ children }) => {
       icon: <Bell className="h-5 w-5" /> 
     },
     { 
-      name: 'Profile', 
-      path: '/faculty/profile', 
-      icon: <UserCircle className="h-5 w-5" /> 
+      name: 'Students', 
+      path: '/faculty/students', 
+      icon: <Users className="h-5 w-5" /> 
     },
   ];
 
