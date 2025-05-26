@@ -168,10 +168,10 @@ const Notes = () => {
       return sortConfig.direction === 'asc' 
         ? a.title.localeCompare(b.title)
         : b.title.localeCompare(a.title);
-    } else if (sortConfig.key === 'downloads') {
+    } else if (sortConfig.key === 'viewcnt') {
       return sortConfig.direction === 'asc' 
-        ? a.downloads - b.downloads
-        : b.downloads - a.downloads;
+        ? a.viewcnt - b.viewcnt
+        : b.viewcnt - a.viewcnt;
     }
     return 0;
   });
@@ -271,9 +271,9 @@ const Notes = () => {
               <button
                 type="button"
                 className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                onClick={() => handleSort('downloads')}
+                onClick={() => handleSort('viewcnt')}
               >
-                {sortConfig.key === 'downloads' ? (
+                {sortConfig.key === 'viewcnt' ? (
                   sortConfig.direction === 'asc' ? (
                     <SortAsc className="h-5 w-5 text-gray-500" />
                   ) : (
@@ -282,7 +282,7 @@ const Notes = () => {
                 ) : (
                   <ListFilter className="h-5 w-5 text-gray-500" />
                 )}
-                <span className="ml-2">Downloads</span>
+                <span className="ml-2">Views</span>
               </button>
             </div>
           </div>
