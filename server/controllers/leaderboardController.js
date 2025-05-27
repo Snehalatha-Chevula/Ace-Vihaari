@@ -18,7 +18,6 @@ exports.cgpaLeaderboard = async(request, response)=>{
         ORDER BY 
             c.currentCGPA DESC`
        );
-       console.log(rows);
         return response.status(200).json({
             message : {
                 rows
@@ -49,7 +48,6 @@ exports.codingLeaderboard = async(request, response)=>{
         ORDER BY 
             problemsSolved DESC`
        );
-       console.log(rows);
         return response.status(200).json({
             message : {
                 rows

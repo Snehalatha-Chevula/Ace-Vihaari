@@ -456,7 +456,7 @@ const Notes = () => {
                           value={uploadFormData.title}
                           onChange={handleUploadFormChange}
                           required
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="p-1 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
 
@@ -471,7 +471,7 @@ const Notes = () => {
                           value={uploadFormData.subject}
                           onChange={handleUploadFormChange}
                           required
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="p-1 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
 
@@ -485,7 +485,7 @@ const Notes = () => {
                           rows="3"
                           value={uploadFormData.description}
                           onChange={handleUploadFormChange}
-                          className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="p-1 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         ></textarea>
                       </div>
 
