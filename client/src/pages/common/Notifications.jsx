@@ -23,7 +23,9 @@ const NotificationsPage = () => {
       branch: [],
       semester: [],
       section: []
-    }
+    },
+    action : '',
+    actionLink : ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,12 +53,27 @@ const NotificationsPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    return;
+
+    try{
+       let userName = await axios.post('/api/dashboard/getUserName',{userID});
+       userName = userName.data.message.fullName;
+       const details = {formData,userID,userName};
+       const res = await axios.post('/api/notifications/createNotifications',details);
+       toast.success("Notification sent successfully");
+       setUploadModalOpen(false);
+
+       const response = await axios.get(`/api/notifications/getNotifications/${userID}`);
+       const data = response.data.message;
+       setNotifications(data);
+    }
+    catch(e){
+      console.log("error in api request",e);
+    }
   };
 
-  const branches = ['Computer Science', 'Electronics', 'Mechanical', 'Civil', 'Electrical'];
-  const semesters = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
-  const sections = ['A', 'B', 'C'];
+  const branches = ['ALL','CSE','IT','IOT','CSM','CSD','ECE','EEE','CIVIL','MECH'];
+  const semesters = ['ALL','1', '2', '3', '4', '5', '6', '7', '8'];
+  const sections = ['ALL','A', 'B', 'C'];
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -472,6 +489,41 @@ const NotificationsPage = () => {
                             ))}
                           </div>
                         </div>
+
+                      </div>
+
+                      <div className="px-4 py-5 sm:p-6">
+                        <div className="grid grid-cols-1 gap-6">
+                          <div>
+                            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                              Action Label 
+                            </label>
+                            <input
+                              type="text"
+                              name="action"
+                              id="action"
+                              value={formData.action}
+                              onChange={handleChange}
+                              className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                              placeholder="Enter action"
+                            />
+                          </div>
+            
+                          <div>
+                            <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+                              Action Link
+                            </label>
+                            <textarea
+                              id="actionLink"
+                              name="actionLink"
+                              rows="4"
+                              value={formData.actionLink}
+                              onChange={handleChange}
+                              className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                              placeholder="Enter actionLink"
+                            ></textarea>
+                          </div>
+                        </div>
                       </div>
             
                       {/* Preview */}
@@ -487,6 +539,7 @@ const NotificationsPage = () => {
                             }`}>
                               <Bell className="h-5 w-5" />
                             </div>
+                            
                             <div className="ml-3 flex-1">
                               <p className="text-sm font-medium text-gray-900">{formData.title || 'Notification Title'}</p>
                               <p className="mt-1 text-sm text-gray-500">{formData.message || 'Notification message will appear here'}</p>
@@ -497,7 +550,11 @@ const NotificationsPage = () => {
                                   formData.targetAudience.section.length ? `Section ${formData.targetAudience.section.join(', ')}` : null
                                 ].filter(Boolean).join(' • ') || 'All Students'}
                               </div>
+                              <div className="mt-2 text-xs text-gray-500">
+                                {formData.action || 'Action'} : {formData.actionLink || 'Action Link'}
+                              </div>
                             </div>
+
                           </div>
                         </div>
                       </div>
