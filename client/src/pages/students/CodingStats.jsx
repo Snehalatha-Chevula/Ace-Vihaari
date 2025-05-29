@@ -2,8 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { Code, Trophy, Star, TrendingUp, GitBranch } from 'lucide-react';
 import StudentLayout from './StudentLayout';
 import Chart from 'react-apexcharts';
+import Toggle from './CodingStatsUI/Toggle';
+import DistributionChart from './CodingStatsUI/DistributionChart';
+import PlatformCard from './CodingStatsUI/PlatformCard';
 import axios from 'axios';
 
+
+const userData = {
+  platforms: [
+    {
+      id: "leetcode",
+      name: "LeetCode",
+      icon: "Code",
+      color: "#FFA116",
+      problemsSolved: 145,
+      score: 1850
+    },
+    {
+      id: "codechef",
+      name: "CodeChef",
+      icon: "Coffee",
+      color: "#5B4638",
+      problemsSolved: 92,
+      score: 1420
+    },
+    {
+      id: "geeksforgeeks",
+      name: "GeeksForGeeks",
+      icon: "BookOpen",
+      color: "#2F8D46",
+      problemsSolved: 178,
+      score: 2100
+    }
+  ]
+  };
 
 const CodingPerformance = () => {
 
@@ -11,180 +43,85 @@ const CodingPerformance = () => {
   const [performanceData, setPerformanceData] = useState({
     loading: true,
     error: null,
-    leetcode : {},
-    gfg : {},
-    codechef : {}
+    platforms : [
+      {},
+      {},
+      {}
+    ],
+    totalProblems : 0,
+    totalScore : 0,
   });
-  let  leetcodeStats;
-  let gfgStats;
-  useEffect(() => {
-    const fetchPerformanceData = async () => {
-      try {
-        // Mock data for development
-        let res = await axios.get(`/api/codingstats/getLeetcodeStats/${userID}`);
-        leetcodeStats = res.data;
-        console.log("leetcode stats",leetcodeStats);
-        res = await axios.get(`/api/codingstats/getgfgStats/${userID}`);
-        gfgStats = res.data;
-        console.log("gfg stats",gfgStats);
-        const data = {
-          totalSolved: 342,
-          ranking: {
-            college: 15,
-            global: 45892
-          },
-          platforms: {
-            leetcode: {
-              username: 'techmaster',
-              solved: 145,
-              ranking: 12543,
-              streak: 15,
-              recentSubmissions: [
-                { date: '2024-03-01', count: 3 },
-                { date: '2024-03-02', count: 2 },
-                { date: '2024-03-03', count: 4 },
-                { date: '2024-03-04', count: 1 },
-                { date: '2024-03-05', count: 3 },
-                { date: '2024-03-06', count: 2 },
-                { date: '2024-03-07', count: 5 }
-              ],
-              difficultyStats: {
-                easy: 45,
-                medium: 85,
-                hard: 15
-              }
-            },
-            gfg: {
-              username: 'codemaster',
-              solved: 98,
-              ranking: 8765,
-              streak: 8,
-              recentSubmissions: [
-                { date: '2024-03-01', count: 2 },
-                { date: '2024-03-02', count: 1 },
-                { date: '2024-03-03', count: 3 },
-                { date: '2024-03-04', count: 2 },
-                { date: '2024-03-05', count: 1 },
-                { date: '2024-03-06', count: 4 },
-                { date: '2024-03-07', count: 2 }
-              ],
-              difficultyStats: {
-                basic: 30,
-                easy: 40,
-                medium: 20,
-                hard: 8
-              }
-            },
-            hackerrank: {
-              username: 'algopro',
-              solved: 99,
-              ranking: 5432,
-              streak: 12,
-              recentSubmissions: [
-                { date: '2024-03-01', count: 1 },
-                { date: '2024-03-02', count: 3 },
-                { date: '2024-03-03', count: 2 },
-                { date: '2024-03-04', count: 4 },
-                { date: '2024-03-05', count: 2 },
-                { date: '2024-03-06', count: 1 },
-                { date: '2024-03-07', count: 3 }
-              ],
-              difficultyStats: {
-                easy: 35,
-                intermediate: 45,
-                advanced: 19
-              }
-            }
-          }
-        };
+  const [viewMode, setViewMode] = useState('problems');
 
-        setPerformanceData({
-          loading: false,
-          error: null,
-          leetcode : leetcodeStats,
-          gfg : gfgStats
-        });
-      } catch (error) {
-        console.error('Failed to fetch coding performance data:', error);
+  useEffect(() => {
+    const fetchData = async () => {
+
+      try {
+        let response = await axios.get(`/api/codingstats/getLeetcodeStats/${userID}`);
+        const leetcode = response.data;
+
+        response = await axios.get(`/api/codingstats/getgfgStats/${userID}`);
+        const gfg = response.data;
+
+        response = await axios.get(`/api/codingstats/getCodechefStats/${userID}`);
+        const codechef = response.data;
+
+        console.log(leetcode);
+        console.log(gfg);
+        console.log(codechef);
+
+        const leetcodeScore = leetcode.easySolved * 1 + leetcode.mediumSolved * 2.5 + leetcode.hardSolved * 4;
+        const gfgScore = Number(gfg.pd[0]) * 0.33 + Number(gfg.pd[1]) * 0.5 + Number(gfg.pd[2]) * 1 + Number(gfg.pd[3]) * 2.5 + Number(gfg.pd[4]) * 4;
+        const codechefScore = Number(codechef.totalProblems) * 1 + (Number(codechef.rating) - 1000)/25; 
+   
+        let tp = Number(leetcode.totalSolved) + Number(gfg.problemsSolved) + 92;
+        let ts = leetcodeScore + gfgScore + codechefScore;
+
         setPerformanceData(prev => ({
           ...prev,
-          loading: false,
-          error: 'Failed to load performance data'
+          loading : false,
+          platforms : [
+            {
+              id: "leetcode",
+              name: "LeetCode",
+              icon: "Code",
+              color: "#FFA116",
+              username : leetcode.userName,  
+              problemsSolved: leetcode.totalSolved,
+              score: leetcodeScore
+            },
+            {
+              id: "geeksforgeeks",
+              name: "GeeksForGeeks",
+              username : gfg.userName, 
+              icon: "BookOpen",
+              color: "#2F8D46",
+              problemsSolved: gfg.problemsSolved,
+              score: gfgScore
+            },
+            {
+              id: "codechef",
+              name: "CodeChef",
+              username : codechef.userName, 
+              icon: "ChefHat",
+              color: "#5B4638",
+              problemsSolved: codechef.totalProblems,
+              score: codechefScore
+            }
+          ],
+          totalProblems : tp,
+          totalScore : ts,
         }));
       }
+      catch(e) {
+        console.log('Error while fetching stats...', e);
+      }
+
     };
 
-    fetchPerformanceData();
-  }, []);
+    fetchData();
+  },[]);
 
-  const submissionChartOptions = {
-    chart: {
-      type: 'area',
-      toolbar: {
-        show: false
-      },
-      sparkline: {
-        enabled: false
-      }
-    },
-    stroke: {
-      curve: 'smooth',
-      width: 2
-    },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.7,
-        opacityTo: 0.3,
-        stops: [0, 90, 100]
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    xaxis: {
-      type: 'datetime',
-      labels: {
-        format: 'dd MMM'
-      }
-    },
-    yaxis: {
-      min: 0,
-      labels: {
-        formatter: (val) => Math.floor(val)
-      }
-    },
-    tooltip: {
-      x: {
-        format: 'dd MMM yyyy'
-      }
-    },
-    legend: {
-      show: true,
-      position: 'top'
-    }
-  };
-
-  const difficultyChartOptions = {
-    chart: {
-      type: 'donut',
-    },
-    legend: {
-      position: 'bottom'
-    },
-    responsive: [{
-      breakpoint: 480,
-      options: {
-        chart: {
-          width: 200
-        },
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }]
-  };
 
   if (performanceData.loading) {
     return (
@@ -219,125 +156,43 @@ const CodingPerformance = () => {
     );
   }
 
-  const { stats } = performanceData;
-
   return (
     <StudentLayout>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Coding Performance</h1>
-        <p className="text-gray-600 mt-1">Track your progress across different coding platforms</p>
+      <div className="min-h-screen bg-gray-50 p-2 md:p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-start md:items-center justify-between mb-8 gap-4">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Coding Platform Dashboard
+          </h1>
+          
+          <Toggle
+            options={[
+              { value: 'problems', label: 'Problems Solved' },
+              { value: 'scores', label: 'Scores' }
+            ]}
+            value={viewMode}
+            onChange={(value) => setViewMode(value)}
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-10">
+          {performanceData.platforms.map((platform) => (
+            <PlatformCard
+              key={platform.id}
+              platform={platform}
+              viewMode={viewMode}
+              totalValue={viewMode == 'problems' ? performanceData.totalProblems : performanceData.totalScore}
+            />
+          ))}
+        </div>
+
+        <DistributionChart
+          platforms={performanceData.platforms}
+          viewMode={viewMode}
+          totalValue={viewMode == 'problems' ? performanceData.totalProblems : performanceData.totalScore}
+        />
       </div>
-
-      {/* Overall Stats */}
-      <div className="grid grid-cols-1 gap-10 mb-8 lg:grid-cols-2">
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
-                <Code className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Problems Solved</dt>
-                  <dd className="text-lg font-semibold text-gray-900">{40}</dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-purple-100 rounded-md p-3">
-                <Trophy className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">College Rank</dt>
-                  <dd className="text-lg font-semibold text-gray-900">#{1}</dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Platform Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-8">
-        {/* LeetCode */}
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">LeetCode</h3>
-            <p className="mt-1 text-sm text-gray-500">{performanceData.leetcode.userName}</p>
-          </div>
-          <div className="px-4 py-5 sm:p-6">
-            <div className="mb-4">
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium text-gray-500">Problems Solved</span>
-                <span className="text-sm font-medium text-gray-900">{performanceData.leetcode.totalSolved}</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium text-gray-500">Ranking</span>
-                <span className="text-sm font-medium text-gray-900">#{performanceData.leetcode.ranking}</span>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-gray-900 mb-5">Difficulty Distribution</h4>
-              <Chart
-                options={{
-                  ...difficultyChartOptions,
-                  labels: ['Easy', 'Medium', 'Hard'],
-                  colors: ['#10b981', '#f59e0b', '#ef4444']
-                }}
-                series={[
-                  performanceData.leetcode.easySolved,
-                  performanceData.leetcode.mediumSolved,
-                  performanceData.leetcode.hardSolved,
-                ]}
-                type="donut"
-                height={250}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* GeeksForGeeks */}
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">GeeksForGeeks</h3>
-            <p className="mt-1 text-sm text-gray-500">{performanceData.gfg.userName}</p>
-          </div>
-          <div className="px-4 py-5 sm:p-6">
-            <div className="mb-4">
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium text-gray-500">Problems Solved</span>
-                <span className="text-sm font-medium text-gray-900">{performanceData.gfg.ProblemsSolved}</span>
-              </div>   
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-gray-900 mb-5">Difficulty Distribution</h4>
-              <Chart
-                options={{
-                  ...difficultyChartOptions,
-                  labels: ['Basic', 'Easy', 'Medium', 'Hard'],
-                  colors: ['#60a5fa', '#10b981', '#f59e0b', '#ef4444']
-                }}
-                series={[
-                  performanceData.gfg.pd[0],
-                  performanceData.gfg.pd[1],
-                  performanceData.gfg.pd[2],
-                  performanceData.gfg.pd[3]
-                ]}
-                type="donut"
-                height={250}
-              />
-            </div>
-          </div>
-        </div>
-       
-      </div>
-      
+    </div>
     </StudentLayout>
   );
 };

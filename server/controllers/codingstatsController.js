@@ -36,12 +36,10 @@ exports.getLeetcodeStats = async(req,res) =>{
 
 exports.getgfgStats = async(req,res) =>{
     const userID = req.params.userID;
-    console.log(userID);
     try{
         let [userName] = await db.query(`
             SELECT gfg from codingprofiles Where userID = ?`,[userID]);
         userName = userName[0]['gfg'];
-        console.log(userName);
         const url = `https://auth.geeksforgeeks.org/user/${userName}/practice`;
         const response = await axios.get(url);
         const $ = cheerio.load(response.data);
@@ -49,9 +47,8 @@ exports.getgfgStats = async(req,res) =>{
         const divisions = $('.problemNavbar_head__cKSRi .problemNavbar_head_nav__a4K6P');
 
         let pd = [];
-        for(let i=1;i<divisions.length;i++) {
+        for(let i=0;i<divisions.length;i++) {
             const d = divisions.eq(i).text();
-            console.log(d);
             let j = d.length-2;
             while(j >=0 && d[j] != '(')
                 j--;
@@ -67,6 +64,35 @@ exports.getgfgStats = async(req,res) =>{
     }
     catch(e){
         console.log("error while fetching geeksforgeeks data",e);
+        res.status(500).json({message:"server error"});
+    }
+}
+
+exports.getCodechefStats = async(req,res) =>{
+    const userID = req.params.userID;
+    try{
+        let [userName] = await db.query(`
+            SELECT codechef from codingprofiles Where userID = ?`,[userID]);
+        userName = userName[0]['codechef'];
+        
+        const response = await axios.get(`https://www.codechef.com/users/${userName}`);
+        const $ = cheerio.load(response.data);
+        const tp = $('.rating-data-section.problems-solved h3').eq(3).text();
+        let j = tp.length-1;
+        while(j >= 0 && tp[j] != ' '){
+            j--;
+        }
+        let totalProblems = Number(tp.slice(j+1,tp.length));
+        const rating = $('.rating-number').text();
+
+        res.status(200).json({
+            totalProblems,
+            rating,
+            userName
+        });
+    }
+    catch(e){
+        console.log("error while fetching codechef data",e);
         res.status(500).json({message:"server error"});
     }
 }
