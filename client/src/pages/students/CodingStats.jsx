@@ -57,18 +57,12 @@ const CodingPerformance = () => {
     const fetchData = async () => {
 
       try {
-        let response = await axios.get(`/api/codingstats/getLeetcodeStats/${userID}`);
-        const leetcode = response.data;
+        let response = await axios.get(`/api/codingstats/getCodingStats/${userID}`);
+        const data = response.data.platforms;
 
-        response = await axios.get(`/api/codingstats/getgfgStats/${userID}`);
-        const gfg = response.data;
-
-        response = await axios.get(`/api/codingstats/getCodechefStats/${userID}`);
-        const codechef = response.data;
-
-        console.log(leetcode);
-        console.log(gfg);
-        console.log(codechef);
+        const leetcode = data[0];
+        const gfg = data[1];
+        const codechef = data[2];
 
         const leetcodeScore = Number((leetcode.easySolved * 1 + leetcode.mediumSolved * 2.5 + leetcode.hardSolved * 4).toFixed(1));
         const gfgScore = Number((Number(gfg.pd[0]) * 0.33 + Number(gfg.pd[1]) * 0.5 + Number(gfg.pd[2]) * 1 + Number(gfg.pd[3]) * 2.5 + Number(gfg.pd[4]) * 4).toFixed(1));
