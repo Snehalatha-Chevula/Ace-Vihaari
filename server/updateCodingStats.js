@@ -59,8 +59,8 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                 }
                 else {
                     await connection.execute(`
-                        UPDATE gfg SET totalProblems = ?, school = ?, basic = ?, easy = ?, med = ?, hard = ?`,
-                        [sum, pd[0], pd[1], pd[2], pd[3], pd[4]],
+                        UPDATE gfg SET totalProblems = ?, school = ?, basic = ?, easy = ?, med = ?, hard = ? WHERE userName = ?`,
+                        [sum, pd[0], pd[1], pd[2], pd[3], pd[4], gfg],
                         (err,res) => {
                             console.log('Erroe while updating into gfg',err);
                         }
@@ -99,8 +99,8 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                 }
                 else {
                     await connection.execute(`
-                        UPDATE codechef SET totalProblems = ?, rating = ?`,
-                        [totalProblems, rating],
+                        UPDATE codechef SET totalProblems = ?, rating = ? WHERE userName = ?`,
+                        [totalProblems, rating, codechef],
                         (err,res) => {
                             console.log('Erroe while updating into codechef',err);
                         }
@@ -133,8 +133,8 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                 }
                 else {
                     await connection.execute(`
-                        UPDATE leetcode SET easy = ?, med = ?, hard = ?, totalProblems = ?`,
-                        [easySolved, mediumSolved, hardSolved, totalSolved],
+                        UPDATE leetcode SET easy = ?, med = ?, hard = ?, totalProblems = ? WHERE userName = ?`,
+                        [easySolved, mediumSolved, hardSolved, totalSolved, leetcode],
                         (err,res) => {
                             console.log('Erroe while updating into leetcode',err);
                         }
