@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Bell, CheckCircle, AlertCircle, Info, BookOpen, X, Calendar, Filter, Send, Plus } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
@@ -82,7 +82,12 @@ const NotificationsPage = () => {
         
         const response = await axios.get(`/api/notifications/getNotifications/${userID}`);
         
-        const data = response.data.message;
+        let data = response.data.message;
+        if(user.role == 'faculty'){
+          for(let i=0;i<data.length;i++) {
+            data[i]['isRead'] = true;
+          }
+        }
         
         setNotifications(data);
         setError(null);
@@ -187,16 +192,17 @@ const NotificationsPage = () => {
             >
               All
             </button>
-            <button
-              onClick={() => setFilter('unread')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md ${
-                filter === 'unread'
-                  ? 'bg-blue-100 text-blue-800'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Unread
-            </button>
+            {(user.role == 'student' && <button
+                onClick={() => setFilter('unread')}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md ${
+                  filter === 'unread'
+                    ? 'bg-blue-100 text-blue-800'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Unread
+              </button>)
+            }
             <button
               onClick={() => setFilter('info')}
               className={`px-3 py-1.5 text-sm font-medium rounded-md ${
