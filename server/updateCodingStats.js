@@ -25,6 +25,12 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
             const {userID, leetcode, codechef, gfg} = row;
             console.log(userID,leetcode,codechef,gfg);
 
+            let tps = 0;
+            let ts = 0;
+            let gfgScore = 0;
+            let leetcodeScore = 0;
+            let codechefScore = 0;
+
             try{
                 const url = `https://auth.geeksforgeeks.org/user/${gfg}/practice`;
                 const response = await axios.get(url);
@@ -42,6 +48,9 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                     sum += num;
                     pd.push(num);
                 }
+
+                gfgScore = Number((pd[0] * 0.33 + pd[1] * 0.5 + pd[2] * 1 + pd[3] * 2.5 + pd[4] * 4).toFixed(0));
+                tps += (pd[0] + pd[1] + pd[2] + pd[3] + pd[4]);
 
                 const [isExists] = await connection.execute(`
                         SELECT * from gfg WHERE userName = ?`,
@@ -83,6 +92,9 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                 let totalProblems = Number(tp.slice(j+1,tp.length));
                 const rating = $('.rating-number').text();
 
+                codechefScore =  Number((totalProblems * 1 + (Number(rating) - 1000)/25).toFixed(0));
+                tps += totalProblems; 
+
                 const [isExists] = await connection.execute(`
                         SELECT * from codechef WHERE userName = ?`,
                         [codechef]
@@ -116,6 +128,9 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                 const response = await axios.get(`https://leetcode-stats-api.herokuapp.com/${leetcode}`)
     
                 const {totalSolved,easySolved,mediumSolved,hardSolved,ranking} = response.data;
+
+                tps += totalSolved;
+                leetcodeScore = Number((easySolved * 1 + mediumSolved * 2.5 + hardSolved * 4).toFixed(0));
                 
                 const [isExists] = await connection.execute(`
                     SELECT * from leetcode WHERE userName = ?`,
@@ -143,6 +158,37 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
             }
             catch(e){
                 console.log("error while fetching leetcode data",e);
+            }
+
+            ts = gfgScore + leetcodeScore + codechefScore;
+
+            try {
+                const [isExists] = await connection.execute(`
+                    SELECT * from codingSummary WHERE userID = ?`,
+                    [userID]
+                )
+
+                if(isExists.length == 0) {
+                    await connection.execute(`
+                        INSERT INTO codingSummary (userID, totalProblemsSolved, leetcodeScore, codechefScore, gfgScore, totalScore) VALUES 
+                        (?, ?, ?, ?, ?, ?)`, [userID, tps, leetcodeScore, codechefScore, gfgScore, ts],
+                        (err,res) => {
+                            console.log('Erroe while inserting into codingSummary table',err);
+                        }
+                    )
+                }
+                else {
+                    await connection.execute(`
+                        UPDATE codingSummary SET totalProblemsSolved = ?, leetcodeScore = ?, codechefScore = ?, gfgScore = ?, totalScore = ? WHERE userID = ?`,
+                        [tps, leetcodeScore, codechefScore, gfgScore, ts,userID],
+                        (err,res) => {
+                            console.log('Erroe while updating codingSummary tanle',err);
+                        }
+                    )
+                }    
+            }
+            catch(e) {
+                console.log('Error while updating codingSummary table : ',e);
             }
         }
     }

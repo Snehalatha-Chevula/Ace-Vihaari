@@ -9,10 +9,11 @@ const Dashboard = () => {
     user : 'Student',
     performance: {},
     attendance: {},
+    totalProblemsSolved : 0,
     loading: true,
     error: null
   });
-
+  let cgpas;
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -24,11 +25,19 @@ const Dashboard = () => {
         attendance = attendance.data.message;
         let user = await axios.post('/api/dashboard/getUserName',{userID});
         user = user.data.message.fullName;
-        
+        const res = await axios.get(`/api/dashboard/getTotalProblems/${userID}`);
+        const {totalProblemsSolved} = res.data;
+        cgpas = performance.cgpaHistory;
+        while(cgpas.length < 8){
+          cgpas.push(null);
+        }
+        performance.cgpaHistory = cgpas;
+
         setDashboardData({
           user,
           performance,
           attendance,
+          totalProblemsSolved,
           loading: false,
           error: null
         });
@@ -59,7 +68,7 @@ const Dashboard = () => {
     },
     colors: ['#3b82f6'],
     xaxis: {
-      categories: dashboardData.performance.semesters || [],
+      categories: ["Sem1","Sem2","Sem3","Sem4","Sem5","Sem6","Sem7","Sem8"]
     },
     yaxis: {
       min: 0,
@@ -217,7 +226,7 @@ const Dashboard = () => {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Coding Problems</dt>
                   <dd>
-                    <div className="text-lg font-semibold text-gray-900">{342}</div>
+                    <div className="text-lg font-semibold text-gray-900">{dashboardData.totalProblemsSolved}</div>
                   </dd>
                 </dl>
               </div>
@@ -245,9 +254,9 @@ const Dashboard = () => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2">
+      <div className="flex justify-center align-middle">
         {/* CGPA Progress */}
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-white overflow-hidden shadow rounded-lg w-50 sm:w-70 md:w-50 lg:w-50 xl:w-200 ">
           <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
             <h3 className="text-lg font-medium leading-6 text-gray-900">CGPA Progression</h3>
           </div>
@@ -256,34 +265,11 @@ const Dashboard = () => {
               options={cgpaChartOptions} 
               series={[{
                 name: 'CGPA',
-                data: dashboardData.performance.cgpaHistory || []
+                data:  dashboardData.performance.cgpaHistory
               }]} 
               type="line" 
               height={320} 
             />
-          </div>
-        </div>
-
-        {/* Attendance Chart */}
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Subject-wise Attendance</h3>
-          </div>
-          <div className="px-4 py-5 sm:p-6">
-            <div className="grid grid-cols-2 gap-4">
-              {dashboardData.attendance.subjects?.map((subject, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Chart 
-                    options={attendanceChartOptions} 
-                    series={[subject.percentage]} 
-                    type="radialBar" 
-                    height={160} 
-                    width={140} 
-                  />
-                  <div className="mt-2 text-sm font-medium text-center">{subject.name}</div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>

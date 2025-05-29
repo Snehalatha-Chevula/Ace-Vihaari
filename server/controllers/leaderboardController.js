@@ -38,15 +38,18 @@ exports.codingLeaderboard = async(request, response)=>{
             p.fullName as name,
             a.branch,
             a.currentSem as semester,
-            tp.totalProblems as problemsSolved
+            cs.leetcodeScore as lcs,
+            cs.codechefScore as ccs,
+            cs.gfgScore as gfgs,
+            cs.totalScore as ts
         FROM 
             academicInfo a
         JOIN 
             personalInfo p ON a.userID = p.userID
         JOIN 
-            totalProblemsSolved tp ON a.userID = tp.userID
+            codingSummary cs ON a.userID = cs.userID
         ORDER BY 
-            problemsSolved DESC`
+            ts DESC`
        );
         return response.status(200).json({
             message : {
@@ -55,7 +58,7 @@ exports.codingLeaderboard = async(request, response)=>{
         });
     }
     catch(error){
-        console.log("Error while fetching details.")
+        console.log("Error while fetching details.",error)
         response.status(500).json({message : 'Server Error'});
     }
 }

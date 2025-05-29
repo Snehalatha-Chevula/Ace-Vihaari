@@ -5,12 +5,10 @@ exports.getPerformanceData = async(request, response)=>{
     try{
         const [rows] = await db.query(`SELECT * from academicInfo WHERE userID = ?`,[userID]);
         const {currentSem } = rows[0];
-        let semester =[];
         let cgpaHistory = [];
         const [cgpas] = await db.query(`SELECT * FROM cgpa WHERE userID = ?`, [userID]);
         let currentCGPA;
         for(let i=0;i<currentSem-1;i++){
-            semester.push(`Sem ${i+1}`);
             cgpaHistory.push(cgpas[0][`sem${i+1}`]);
             currentCGPA = cgpas[0][`sem${i+1}`];
         }
@@ -18,7 +16,6 @@ exports.getPerformanceData = async(request, response)=>{
             message : {
                 currentCGPA,
                 currentSem,
-                semester,
                 cgpaHistory,
             }
         });
@@ -66,5 +63,22 @@ exports.getUserName = async(request, response)=>{
     catch(error){
         console.log("Error while fetching details.")
         response.status(500).json({message : 'Server Error'});
+    }
+}
+
+exports.getTotalProblems = async(req,res)=>{
+    const {userID} = req.params;
+    try{
+        const [rows] = await db.query(`
+            SELECT totalProblemsSolved FROM codingSummary WHERE userID = ?`,[userID]
+        );
+        const {totalProblemsSolved} = rows[0];
+        res.status(200).json({
+            totalProblemsSolved
+        });
+    }
+    catch(e){
+        console.log("error while fetching total Problems",e);
+        res.status(500).json({message : "server error"});
     }
 }

@@ -64,12 +64,12 @@ const CodingPerformance = () => {
         const gfg = data[1];
         const codechef = data[2];
 
-        const leetcodeScore = Number((leetcode.easySolved * 1 + leetcode.mediumSolved * 2.5 + leetcode.hardSolved * 4).toFixed(1));
-        const gfgScore = Number((Number(gfg.pd[0]) * 0.33 + Number(gfg.pd[1]) * 0.5 + Number(gfg.pd[2]) * 1 + Number(gfg.pd[3]) * 2.5 + Number(gfg.pd[4]) * 4).toFixed(1));
-        const codechefScore = Number((Number(codechef.totalProblems) * 1 + (Number(codechef.rating) - 1000)/25).toFixed(1)); 
+        const leetcodeScore = Number((leetcode.easySolved * 1 + leetcode.mediumSolved * 2.5 + leetcode.hardSolved * 4).toFixed(0));
+        const gfgScore = Number((Number(gfg.pd[0]) * 0.33 + Number(gfg.pd[1]) * 0.5 + Number(gfg.pd[2]) * 1 + Number(gfg.pd[3]) * 2.5 + Number(gfg.pd[4]) * 4).toFixed(0));
+        const codechefScore = Number((Number(codechef.totalProblems) * 1 + (Number(codechef.rating) - 1000)/25).toFixed(0)); 
    
-        let tp = Number(leetcode.totalSolved) + Number(gfg.problemsSolved) + 92;
-        let ts = Number((leetcodeScore + gfgScore + codechefScore).toFixed(1));
+        let tp = Number(leetcode.totalSolved) + Number(gfg.problemsSolved) + Number(codechef.totalProblems);
+        let ts = Number((leetcodeScore + gfgScore + codechefScore).toFixed(0));
 
         setPerformanceData(prev => ({
           ...prev,

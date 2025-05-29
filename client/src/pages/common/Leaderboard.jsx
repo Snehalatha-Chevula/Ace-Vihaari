@@ -199,18 +199,33 @@ const LeaderboardPage = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Rank
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Roll Number
                     </th>
-                    <th scope="col" className="px-20 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-18 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Student
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {leaderboardType === 'coding' && 
+                      <th scope="col" className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Leetcode
+                      </th>
+                    }
+                    {leaderboardType === 'coding' && 
+                      <th scope="col" className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Codechef
+                      </th>
+                    }
+                    {leaderboardType === 'coding' && 
+                      <th scope="col" className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        gfg
+                      </th>
+                    }
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {leaderboardType === 'cgpa' && 'CGPA'}
-                      {leaderboardType === 'coding' && 'Problems Solved'}
+                      {leaderboardType === 'coding' && 'Overall Score'}
                       {leaderboardType === 'attendance' && 'Attendance'}
                     </th>
                   </tr>
@@ -254,17 +269,41 @@ const LeaderboardPage = () => {
                           <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium">
                             {student.name.charAt(0)}
                           </div>
-                          <div className="ml-3">
+                          <div className="ml-1">
                             <div className="text-sm font-medium text-gray-900">{student.name}</div>
                             <div className="text-sm text-gray-500">{student.branch} - {student.semester} Semester</div>
                           </div>
                         </div>
                       </td>
 
+                      {leaderboardType === 'coding' && 
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="text-sm font-medium text-gray-900">{student.lcs}</div>
+                          </div>
+                        </td>
+                      }
+
+                      {leaderboardType === 'coding' && 
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="text-sm font-medium text-gray-900">{student.ccs}</div>
+                          </div>
+                        </td>
+                      }
+
+                      {leaderboardType === 'coding' && 
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="text-sm font-medium text-gray-900">{student.gfgs}</div>
+                          </div>
+                        </td>
+                      }
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
                           {leaderboardType === 'cgpa' && `${student.cgpa} / 10`}
-                          {leaderboardType === 'coding' && `${student.problemsSolved} problems`}
+                          {leaderboardType === 'coding' && `${student.ts}`}
                           {leaderboardType === 'attendance' && `${student.attendance}%`}
                         </div>
                       </td>
