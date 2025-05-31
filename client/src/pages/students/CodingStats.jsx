@@ -80,14 +80,14 @@ const CodingPerformance = () => {
               name: "LeetCode",
               icon: "Code",
               color: "#FFA116",
-              username : leetcode.userName,  
+              username : leetcode.leetcode,  
               problemsSolved: leetcode.totalSolved,
               score: leetcodeScore
             },
             {
               id: "geeksforgeeks",
               name: "GeeksForGeeks",
-              username : gfg.userName, 
+              username : gfg.gfg, 
               icon: "BookOpen",
               color: "#2F8D46",
               problemsSolved: gfg.problemsSolved,
@@ -96,7 +96,7 @@ const CodingPerformance = () => {
             {
               id: "codechef",
               name: "CodeChef",
-              username : codechef.userName, 
+              username : codechef.codechef, 
               icon: "ChefHat",
               color: "#5B4638",
               problemsSolved: codechef.totalProblems,

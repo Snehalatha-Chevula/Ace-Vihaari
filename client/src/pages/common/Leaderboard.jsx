@@ -5,8 +5,8 @@ import StudentLayout from '../students/StudentLayout';
 import FacultyLayout from '../faculty/FacultyLayout';
 
 const LeaderboardPage = () => {
-  const userID = JSON.parse(localStorage.getItem('user')).user.userID;
   const user = JSON.parse(localStorage.getItem('user')).user;
+  const userID = user.userID;
   const [leaderboardType, setLeaderboardType] = useState('cgpa');
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
