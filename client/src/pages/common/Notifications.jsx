@@ -63,7 +63,12 @@ const NotificationsPage = () => {
        setUploadModalOpen(false);
 
        const response = await axios.get(`/api/notifications/getNotifications/${userID}`);
-       const data = response.data.message;
+       let data = response.data.message;
+        if(user.role == 'faculty'){
+          for(let i=0;i<data.length;i++) {
+            data[i]['isRead'] = true;
+          }
+        }
        setNotifications(data);
     }
     catch(e){
