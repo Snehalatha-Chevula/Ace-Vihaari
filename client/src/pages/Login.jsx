@@ -52,7 +52,7 @@ const Login = () => {
             <form className=' w-[60%] h-[80%] p-10 rounded-3xl shadow-2xl text-center' onSubmit={handleLogin}>
                 <h1 className='text-3xl font-semibold mt-3 mb-7'>Login</h1>
                 <div className="text-left">
-                  <InputField label='Email' type='text' placeholder='Email' value={username} onChange={(e)=>setusername(e.target.value)} />
+                  <InputField label='UserID' type='text' placeholder='userID' value={username} onChange={(e)=>setusername(e.target.value)} />
                   <InputField label='Password' type='password' placeholder='password' value={password} onChange={(e)=>setpassword(e.target.value)} />
                 </div>
                 <div className="flex flex-col md:flex-row justify-around items-center mb-5 mt-7">
