@@ -1,6 +1,6 @@
 import React, { useState, useEffect, use } from 'react';
 import { Bell, CheckCircle, AlertCircle, Info, BookOpen, X, Calendar, Filter, Send, Plus } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow} from 'date-fns';
 import axios from 'axios';
 import StudentLayout from '../students/StudentLayout';
 import FacultyLayout from '../faculty/FacultyLayout';
@@ -626,13 +626,19 @@ function getNotificationTypeIcon(type) {
 
 function formatDate(dateString) {
   const date = new Date(dateString);
-  const today = new Date().toDateString();
+
+  const today = new Date();
   const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  
-  if (dateString === today) {
+  yesterday.setDate(today.getDate() - 1);
+
+  // Compare only the date portion by converting all to .toDateString()
+  const input = date.toDateString();
+  const todayStr = today.toDateString();
+  const yestStr = yesterday.toDateString();
+
+  if (input === todayStr) {
     return 'Today';
-  } else if (dateString === yesterday.toDateString()) {
+  } else if (input === yestStr) {
     return 'Yesterday';
   } else {
     return format(date, 'MMMM d, yyyy');
@@ -640,15 +646,36 @@ function formatDate(dateString) {
 }
 
 function formatNotificationTime(timestamp) {
+
   const date = new Date(timestamp);
-  
-  // If less than 24 hours ago, show relative time
-  if (Date.now() - date.getTime() < 1000 * 60 * 60 * 24) {
-    return formatDistanceToNow(date, { addSuffix: true });
+
+  // Manually shift UTC to IST (+5.5 hours)
+  const istOffsetMs = 5.5 * 60 * 60 * 1000;
+  const istDate = new Date(date.getTime() + istOffsetMs);
+
+  const now = new Date();
+  const diffMs = now - istDate;
+
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+  if (diffMins < 1) {
+    return 'Just now';
+  } else if (diffMins < 60) {
+    return `${diffMins} minute${diffMins === 1 ? '' : 's'} ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+  } else {
+    return istDate.toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
   }
-  
-  // Otherwise show actual time
-  return format(date, 'MMM d, yyyy \'at\' h:mm a');
 }
 
 export default NotificationsPage;
