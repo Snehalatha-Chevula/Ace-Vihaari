@@ -52,8 +52,13 @@ exports.getAttendanceData = async(request, response)=>{
 exports.getUserName = async(request, response)=>{
     const {userID} = request.body;
     try{
+        let fullName;
         const [rows] = await db.query(`SELECT * from personalInfo WHERE userID = ?`,[userID]);
-        const {fullName} = rows[0];
+        if(rows.length == 0){
+            fullName = "Student";
+        }
+        else
+            fullName = rows[0].fullName;
         return response.status(200).json({
            message :{
             fullName
@@ -69,10 +74,15 @@ exports.getUserName = async(request, response)=>{
 exports.getTotalProblems = async(req,res)=>{
     const {userID} = req.params;
     try{
+        let totalProblemsSolved;
         const [rows] = await db.query(`
             SELECT totalProblemsSolved FROM codingSummary WHERE userID = ?`,[userID]
         );
-        const {totalProblemsSolved} = rows[0];
+        if(rows.length == 0){
+            totalProblemsSolved = 0;
+        }
+        else
+            totalProblemsSolved = rows[0].totalProblemsSolved;
         res.status(200).json({
             totalProblemsSolved
         });

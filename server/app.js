@@ -12,6 +12,7 @@ const leaderboardRoutes = require('./routes/leaderboardRoute');
 const notificationRoutes = require('./routes/notificationsRoute');
 const notesRoutes = require('./routes/notesRoute');
 const codingstatsRoutes = require('./routes/codingstastsRoute');
+const studentDataRoutes = require('./routes/studentDataRoute');
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.use('/api/leaderboard',leaderboardRoutes);
 app.use('/api/notifications',notificationRoutes);
 app.use('/api/notes',notesRoutes);
 app.use('/api/codingstats',codingstatsRoutes);
-
+app.use('/api/studentData',studentDataRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

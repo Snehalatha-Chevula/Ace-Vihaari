@@ -61,7 +61,7 @@ const StudentLayout = ({ children }) => {
   useEffect(() => {
     const fetchData = async ()=> {
       try {
-        if(localStorage.getItem('userName')){
+        if(localStorage.getItem('userName') && localStorage.getItem('userName') != "Student"){
           setUserName(localStorage.getItem('userName'));
           return;
         }
