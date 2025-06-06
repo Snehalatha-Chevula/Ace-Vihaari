@@ -3,8 +3,11 @@ import { ChevronRight, Users, BookText, CheckCircle, X, AlertCircle } from 'luci
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 import Home from './StudentLayout';
+import { useUser } from '../../context/userContext';
 
 const Dashboard = () => {
+  const {user,loading}= useUser();
+  if (loading) return <div>Loading...</div>;
   const [dashboardData, setDashboardData] = useState({
     user : 'Student',
     performance: {},
@@ -15,16 +18,17 @@ const Dashboard = () => {
   });
   let cgpas;
   useEffect(() => {
+    if(!user)
+        return;
     const fetchDashboardData = async () => {
       try {
-        const userDetails = JSON.parse(localStorage.getItem('user'));
-        const userID = userDetails.user.userID;
+        const {userID} = user;
         let performance = await axios.post('/api/dashboard/getPerformanceData',{userID});
         performance = performance.data.message;
         let attendance = await axios.post('/api/dashboard/getAttendanceData',{userID});
         attendance = attendance.data.message;
-        let user = await axios.post('/api/dashboard/getUserName',{userID});
-        user = user.data.message.fullName;
+        let userName = await axios.post('/api/dashboard/getUserName',{userID});
+        let fullName = userName.data.message.fullName;
         const res = await axios.get(`/api/dashboard/getTotalProblems/${userID}`);
         const {totalProblemsSolved} = res.data;
         cgpas = performance.cgpaHistory;
@@ -34,7 +38,7 @@ const Dashboard = () => {
         performance.cgpaHistory = cgpas;
 
         setDashboardData({
-          user,
+          fullName,
           performance,
           attendance,
           totalProblemsSolved,

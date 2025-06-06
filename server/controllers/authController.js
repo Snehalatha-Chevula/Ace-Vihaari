@@ -8,6 +8,7 @@ exports.loginUser = async(request, response) => {
     try{
 
         const [rows] = await db.query(`SELECT * FROM users WHERE userID = ?`, [username]);
+        console.log(rows);
         if(rows.length == 0){
             return response.status(404).json({message: 'User not found....' });
         }
@@ -23,11 +24,19 @@ exports.loginUser = async(request, response) => {
          
         const token = generateToken(username, isfaculty ? 'faculty' : 'student');
 
+        response.cookie("accessToken", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+            maxAge: 15 * 60 * 1000, 
+        });
+
         return response.status(200).json({
             message : 'Login Successful....',
             user : {
                 userID : username,
-                role : isfaculty ? 'faculty' : 'student'
+                role : isfaculty ? 'faculty' : 'student',
+                userName : isfaculty ? 'Faculty' : 'Student'
             },
             token
         });
@@ -38,3 +47,25 @@ exports.loginUser = async(request, response) => {
         response.status(500).json({message : 'Server Error'});
     }
 };
+
+exports.me = async (req, res) => {
+  try {
+    console.log("in me");
+    console.log(req.user);
+    const [rows] = await db.query("SELECT userID FROM users WHERE userID = ?", [req.user.userID]);
+    const user = rows[0];
+    res.json({
+      userID: user.userID,
+      role: user.userID.toLowerCase().startsWith('f_') ? "faculty" : "student"
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch user" });
+  }
+};
+
+exports.logout = ()=>{
+  router.post("/logout", (req, res) => {
+  res.clearCookie("accessToken");
+  res.json({ message: "Logged out" });
+});
+}
