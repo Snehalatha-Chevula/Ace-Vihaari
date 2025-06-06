@@ -5,6 +5,7 @@ import {
   LayoutDashboard, BookOpen, Users, Trophy, Bell, UserCircle, 
   LogOut, Menu, X, ChevronDown, ChevronUp, ClipboardCheck
 } from 'lucide-react';
+import { useUser } from '../../context/userContext';
 
 const FacultyLayout = ({ children }) => {
   const userID = JSON.parse(localStorage.getItem('user')).user.userID;
@@ -14,8 +15,10 @@ const FacultyLayout = ({ children }) => {
   const [Loading,setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
+  const {setUser}=useUser();
+  const handleLogout = async() => {
+    await axios.post("/api/auth/logout");
+    setUser(null);
     navigate('/');
   };
 

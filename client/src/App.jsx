@@ -9,10 +9,30 @@ import LeaderboardPage from "./pages/common/Leaderboard";
 import CodingStats from "./pages/students/CodingStats";
 import { Toaster } from 'react-hot-toast';
 import Students from "./pages/faculty/Students";
-
+import { useEffect } from "react";
+import axios from "axios";
+import { useUser } from "./context/userContext";
 
 function App() {
-
+  console.log("app rendered");
+  const { setUser, setLoading } = useUser();
+  useEffect(()=>{
+    const fetch = async ()=> {
+      try{
+        console.log("before api call");
+        const res = await axios.get('api/auth/me');
+        console.log("res",res);
+        setUser(res.data);
+      }
+      catch(e){
+        console.log("user not loged in",e);
+      }
+      finally {
+        setLoading(false); 
+      }
+     }
+  fetch();
+  },[]);
   return (
     <Router>
       <Toaster position="top-right" />
@@ -38,4 +58,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

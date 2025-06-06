@@ -5,9 +5,11 @@ import {
   LogOut, Menu, X, ChevronDown, ChevronUp, Laptop
 } from 'lucide-react';
 import axios from 'axios';
+import { useUser } from '../../context/userContext';
 
 const StudentLayout = ({ children }) => {
-  const userID = JSON.parse(localStorage.getItem('user')).user.userID;
+  const userDetails = useUser().user;
+  const {userID} = userDetails;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -15,8 +17,10 @@ const StudentLayout = ({ children }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
+  const {setUser}=useUser();
+  const handleLogout = async() => {
+    await axios.post("/api/auth/logout");
+    setUser(null);
     navigate('/');
   };
 
@@ -77,7 +81,7 @@ const StudentLayout = ({ children }) => {
     };
     fetchData();
   },[]);
-  if(loading){
+  if(loading ){
     return <></>
   }
   return (
