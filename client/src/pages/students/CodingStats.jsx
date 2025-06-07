@@ -6,40 +6,11 @@ import Toggle from './CodingStatsUI/Toggle';
 import DistributionChart from './CodingStatsUI/DistributionChart';
 import PlatformCard from './CodingStatsUI/PlatformCard';
 import axios from 'axios';
-
-
-const userData = {
-  platforms: [
-    {
-      id: "leetcode",
-      name: "LeetCode",
-      icon: "Code",
-      color: "#FFA116",
-      problemsSolved: 145,
-      score: 1850
-    },
-    {
-      id: "codechef",
-      name: "CodeChef",
-      icon: "Coffee",
-      color: "#5B4638",
-      problemsSolved: 92,
-      score: 1420
-    },
-    {
-      id: "geeksforgeeks",
-      name: "GeeksForGeeks",
-      icon: "BookOpen",
-      color: "#2F8D46",
-      problemsSolved: 178,
-      score: 2100
-    }
-  ]
-  };
+import { useUser } from '../../context/userContext';
 
 const CodingPerformance = () => {
-
-  const userID = JSON.parse(localStorage.getItem("user")).user.userID;
+  const {user,loading}= useUser();
+  const userID = user?.userID;
   const [performanceData, setPerformanceData] = useState({
     loading: true,
     error: null,
@@ -54,6 +25,8 @@ const CodingPerformance = () => {
   const [viewMode, setViewMode] = useState('problems');
 
   useEffect(() => {
+    if(!user)
+      return;
     const fetchData = async () => {
 
       try {
@@ -117,7 +90,7 @@ const CodingPerformance = () => {
   },[]);
 
 
-  if (performanceData.loading) {
+  if (performanceData.loading || loading) {
     return (
       <StudentLayout>
         <div className="flex items-center justify-center h-full">

@@ -15,12 +15,11 @@ import { useUser } from "./context/userContext";
 
 function App() {
   console.log("app rendered");
-  const { setUser, setLoading } = useUser();
+  const { setUser, setLoading, loading } = useUser();
   useEffect(()=>{
     const fetch = async ()=> {
       try{
-        console.log("before api call");
-        const res = await axios.get('api/auth/me');
+        const res = await axios.get('/api/auth/me');
         console.log("res",res);
         setUser(res.data);
       }
@@ -32,7 +31,16 @@ function App() {
       }
      }
   fetch();
-  },[]);
+  },[setUser, setLoading]);
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center text-xl">
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <Router>
       <Toaster position="top-right" />

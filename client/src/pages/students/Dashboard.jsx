@@ -7,7 +7,6 @@ import { useUser } from '../../context/userContext';
 
 const Dashboard = () => {
   const {user,loading}= useUser();
-  if (loading) return <div>Loading...</div>;
   const [dashboardData, setDashboardData] = useState({
     user : 'Student',
     performance: {},
@@ -27,8 +26,6 @@ const Dashboard = () => {
         performance = performance.data.message;
         let attendance = await axios.post('/api/dashboard/getAttendanceData',{userID});
         attendance = attendance.data.message;
-        let userName = await axios.post('/api/dashboard/getUserName',{userID});
-        let fullName = userName.data.message.fullName;
         const res = await axios.get(`/api/dashboard/getTotalProblems/${userID}`);
         const {totalProblemsSolved} = res.data;
         cgpas = performance.cgpaHistory;
@@ -38,7 +35,7 @@ const Dashboard = () => {
         performance.cgpaHistory = cgpas;
 
         setDashboardData({
-          fullName,
+          user : user.fullName,
           performance,
           attendance,
           totalProblemsSolved,
@@ -56,7 +53,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [user]);
 
   // CGPA Chart options
   const cgpaChartOptions = {
@@ -133,7 +130,7 @@ const Dashboard = () => {
     labels: ['Attendance']
   };
 
-  if (dashboardData.loading) {
+  if (dashboardData.loading || loading) {
     return (
       <Home>
         <div className="flex items-center justify-center h-full">

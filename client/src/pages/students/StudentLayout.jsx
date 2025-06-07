@@ -8,12 +8,11 @@ import axios from 'axios';
 import { useUser } from '../../context/userContext';
 
 const StudentLayout = ({ children }) => {
-  const userDetails = useUser().user;
-  const {userID} = userDetails;
+  const {user,loading} = useUser();
+  const userID = user?.userID;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [userName, setUserName] = useState('Student');
+  const [userName, setUserName] = useState(user?.fullName ||'Student');
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -63,26 +62,18 @@ const StudentLayout = ({ children }) => {
 
   const isActive = (path) => location.pathname === path;
   useEffect(() => {
-    const fetchData = async ()=> {
-      try {
-        if(localStorage.getItem('userName') && localStorage.getItem('userName') != "Student"){
-          setUserName(localStorage.getItem('userName'));
-          return;
-        }
-        let user = await axios.post('/api/dashboard/getUserName',{userID});
-        localStorage.setItem('userName',user.data.message.fullName);
-        setUserName(user.data.message.fullName);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      }
-      finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  },[]);
-  if(loading ){
-    return <></>
+    if(!user)
+      return;
+    setUserName(user.fullName);
+  },[user]);
+  if(loading){
+    return (
+      <>
+      <div className="h-screen flex items-center justify-center text-xl">
+          Loading...
+        </div>
+      </>
+    );
   }
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -122,7 +113,7 @@ const StudentLayout = ({ children }) => {
                       </div>
                       <span className="ml-2 hidden md:flex flex-col items-start">
                         <span className="text-sm font-medium text-gray-700">{userName}</span>
-                        <span className="text-xs text-gray-500">{userID.toUpperCase()}</span>
+                        <span className="text-xs text-gray-500">{userID?.toUpperCase()}</span>
                       </span>
                       {dropdownOpen ? (
                         <ChevronUp className="ml-1 h-4 w-4 text-gray-500" />

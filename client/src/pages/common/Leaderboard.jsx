@@ -3,10 +3,10 @@ import { Trophy, Medal, Award, Filter } from 'lucide-react';
 import axios from 'axios';
 import StudentLayout from '../students/StudentLayout';
 import FacultyLayout from '../faculty/FacultyLayout';
+import { useUser } from '../../context/userContext';
 
 const LeaderboardPage = () => {
-  const user = JSON.parse(localStorage.getItem('user')).user;
-  const userID = user.userID;
+  const {user} = useUser();
   const [leaderboardType, setLeaderboardType] = useState('cgpa');
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +17,8 @@ const LeaderboardPage = () => {
   });
 
   useEffect(() => {
+    if(!user)
+      return;
     const fetchLeaderboardData = async () => {
       try {
         setLoading(true);
@@ -41,7 +43,7 @@ const LeaderboardPage = () => {
     };
 
     fetchLeaderboardData();
-  }, [leaderboardType,filters]);
+  }, [leaderboardType,filters,user]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

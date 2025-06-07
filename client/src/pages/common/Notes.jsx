@@ -7,9 +7,10 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import FacultyLayout from '../faculty/FacultyLayout';
 import StudentLayout from '../students/StudentLayout';
+import { useUser } from '../../context/userContext';
 
 const Notes = () => {
-  const user = JSON.parse(localStorage.getItem('user')).user;
+  const {user} = useUser();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,6 +30,7 @@ const Notes = () => {
   });
 
   useEffect(() => {
+    if (!user?.userID) return;
     const fetchNotes = async () => {
       try {
         setLoading(true);
@@ -45,7 +47,7 @@ const Notes = () => {
     };
 
     fetchNotes();
-  }, [filters]);
+  }, [user,filters]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -100,8 +102,7 @@ const Notes = () => {
 
       const userID = user.userID
 
-      let userName = await axios.post('/api/dashboard/getUserName',{userID});
-      userName = userName.data.message.fullName;
+      let userName = user.fullName;
 
       formData.append('file', uploadFormData.file);
 

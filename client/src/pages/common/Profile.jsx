@@ -8,11 +8,12 @@ import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import StudentLayout from '../students/StudentLayout';
 import FacultyLayout from '../faculty/FacultyLayout';
+import { useUser } from '../../context/userContext';
 
 const ProfilePage = () => {
+  const {user, setUser} = useUser();
+  const userID = user?.userID;
   const navigate = useNavigate();
-  const userID = JSON.parse(localStorage.getItem('user')).user.userID;
-  const user = JSON.parse(localStorage.getItem('user')).user;
   const [profileData, setProfileData] = useState({
     name: '',
     email: '',
@@ -46,6 +47,8 @@ const ProfilePage = () => {
   });
 
   useEffect(() => {
+    if(!user)
+      return;
     const fetchProfileData = async () => {
       try {
         
@@ -55,7 +58,7 @@ const ProfilePage = () => {
         let personalInfo = await axios.get(`/api/profile/getPersonalInfo/${userID}`);
         personalInfo = personalInfo.data.message.details;
 
-        let role = userID.toLowerCase().charAt(0) == 'f' ? 'faculty' : 'student';
+        let role = user.role;
         let data;
         if(role == 'student'){
           let codingProfiles = await axios.get(`/api/profile/getCodingProfiles/${userID}`);
@@ -93,9 +96,6 @@ const ProfilePage = () => {
             specialization: academicInfo.specialization
           }
         }
-
-        //let data = getMockProfileData('student')
-
         
         setProfileData(data);
       } catch (error) {
@@ -107,7 +107,7 @@ const ProfilePage = () => {
     };
 
     fetchProfileData();
-  }, []);
+  }, [user]);
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -129,6 +129,8 @@ const ProfilePage = () => {
     try {
       setIsSaving(true);
       await axios.put('/api/profile/updateDetails',profileData);
+      const res = await axios.get('/api/auth/me');
+      setUser(res.data);
       toast.success('Profile updated successfully!');
       setIsEditing(false);
     } catch (error) {
@@ -169,7 +171,9 @@ const ProfilePage = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await axios.post("/api/auth/logout");
+    setUser(null);
     navigate('/');
   };
 

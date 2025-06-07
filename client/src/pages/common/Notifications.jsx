@@ -5,10 +5,11 @@ import axios from 'axios';
 import StudentLayout from '../students/StudentLayout';
 import FacultyLayout from '../faculty/FacultyLayout';
 import { toast } from 'react-hot-toast';
+import { useUser } from '../../context/userContext';
 
 const NotificationsPage = () => {
-  const user = JSON.parse(localStorage.getItem('user')).user;
-  const userID = user.userID;
+  const {user} = useUser();
+  const userID = user?.userID;
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,8 +56,7 @@ const NotificationsPage = () => {
     e.preventDefault();
 
     try{
-       let userName = await axios.post('/api/dashboard/getUserName',{userID});
-       userName = userName.data.message.fullName;
+       let userName = user.fullName;
        const details = {formData,userID,userName};
        const res = await axios.post('/api/notifications/createNotifications',details);
        toast.success("Notification sent successfully");
@@ -81,6 +81,8 @@ const NotificationsPage = () => {
   const sections = ['ALL','A', 'B', 'C'];
 
   useEffect(() => {
+    if(!user)
+      return;
     const fetchNotifications = async () => {
       try {
         setLoading(true);
@@ -105,7 +107,7 @@ const NotificationsPage = () => {
     };
 
     fetchNotifications();
-  }, []);
+  }, [user]);
 
   const handleMarkAsRead = async (notificationId) => {
     try {
@@ -243,7 +245,7 @@ const NotificationsPage = () => {
           {notifications.some(notification => !notification.isRead) && (
             <button
               onClick={handleMarkAllAsRead}
-              className="text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="text-sm font-medium text-blue-600 hover:text-blue-700 cursor-pointer"
             >
               Mark all as read
             </button>
@@ -320,7 +322,7 @@ const NotificationsPage = () => {
                                 onClick={() => handleMarkAsRead(notification.id)}
                                 className=" bg-white rounded-lg p-0 hover:bg-gray-100"
                               >
-                              <span className="p-1 text-xs text-green-900">Mark as read</span>
+                              <span className="p-1 text-xs text-green-900 cursor-pointer">Mark as read</span>
                               </button>
                             )}
                           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from "../components/Button";
 import InputField from "../components/InputField";
 import logo1 from "../assets/logo1.png";
@@ -11,7 +11,17 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
-  const { setUser } = useUser();
+  const { setUser, user, loading } = useUser();
+  useEffect(() => {
+    if (!loading && user) {
+      // Redirect based on role
+      if (user.role === 'student') {
+        navigate('/student/dashboard');
+      } else if (user.role === 'faculty') {
+        navigate('/faculty/profile');
+      }
+    }
+  }, [user, loading]);
   const handleLogin = async (e) => {
   e.preventDefault();
   try {

@@ -27,7 +27,7 @@ exports.loginUser = async(request, response) => {
         response.cookie("accessToken", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "Strict",
+            sameSite: 'lax', 
             maxAge: 15 * 60 * 1000, 
         });
 
@@ -52,20 +52,28 @@ exports.me = async (req, res) => {
   try {
     console.log("in me");
     console.log(req.user);
-    const [rows] = await db.query("SELECT userID FROM users WHERE userID = ?", [req.user.userID]);
+    const userID = req.user.userID;
+    const [rows] = await db.query("SELECT userID FROM users WHERE userID = ?", [userID]);
     const user = rows[0];
+    const role = userID.toLowerCase().startsWith('f_') ? "faculty" : "student";
+    let fullName;
+    const [row] = await db.query(`SELECT * from personalInfo WHERE userID = ?`,[userID]);
+    if(row.length == 0){
+        fullName = (role == 'student') ? 'Student' : 'Faculty';
+    }
+    else
+        fullName = row[0].fullName;
     res.json({
-      userID: user.userID,
-      role: user.userID.toLowerCase().startsWith('f_') ? "faculty" : "student"
+      userID,
+      role,
+      fullName
     });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch user" });
   }
 };
 
-exports.logout = ()=>{
-  router.post("/logout", (req, res) => {
+exports.logout = (req,res)=>{
   res.clearCookie("accessToken");
   res.json({ message: "Logged out" });
-});
-}
+};
