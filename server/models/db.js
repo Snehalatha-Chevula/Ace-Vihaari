@@ -1,12 +1,18 @@
-// utils/db.js
+// models/db.js
 const mysql = require("mysql2/promise");
+const fs = require("fs");
+const path = require("path");
+require("dotenv").config();
 
 const pool = mysql.createPool({
-  host: "centerbeam.proxy.rlwy.net",
-  user: "root",               // ✅ Make sure this is your actual username
-  password: "mqHykiVnzPjLBuqRKMYAZZXiDPRlmStp",  // ✅ Replace with your real MySQL password
-  database: "acevihaari",     // ✅ Replace with your actual database name
-  port: 56854,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  ssl: {
+    ca: fs.readFileSync(path.join(__dirname, "../certs/tidb-ca.pem")),
+  },
 });
 
 module.exports = pool;
