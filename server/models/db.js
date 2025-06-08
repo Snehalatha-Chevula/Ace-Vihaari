@@ -11,6 +11,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
   ssl: {
+    ssl: process.env.DB_SSL ? { rejectUnauthorized: true } : undefined,
     ca: fs.readFileSync(path.join(__dirname, "../certs/tidb-ca.pem")),
   },
 });

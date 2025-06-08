@@ -18,7 +18,7 @@ const studentDataRoutes = require('./routes/studentDataRoute');
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173", // replace with frontend URL
+  origin: true, // replace with frontend URL
   credentials: true,
 }));
 app.use(cookieParser());
