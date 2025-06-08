@@ -27,7 +27,7 @@ exports.loginUser = async(request, response) => {
         response.cookie("accessToken", token, {
             httpOnly: true,
             secure: false,
-            sameSite: 'lax', 
+            sameSite: 'None', 
             maxAge: 15 * 60 * 1000, 
         });
 
