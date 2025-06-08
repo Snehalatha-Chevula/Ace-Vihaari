@@ -8,7 +8,8 @@ import {
 import { useUser } from '../../context/userContext';
 
 const FacultyLayout = ({ children }) => {
-  const userID = JSON.parse(localStorage.getItem('user')).user.userID;
+  const {user} = useUser();
+  const userID = user?.userID;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userName, setUserName] = useState('Faculty');
@@ -55,24 +56,11 @@ const FacultyLayout = ({ children }) => {
   ];
 
   useEffect(() => {
-    const fetchData = async ()=> {
-      try {
-        if(localStorage.getItem('userName')){
-          setUserName(localStorage.getItem('userName'));
-          return ;
-        }
-        let user = await axios.post('/api/dashboard/getUserName',{userID});
-        localStorage.setItem('userName',user.data.message.fullName);
-        setUserName(user.data.message.fullName);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      }
-      finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  },[]);
+    if(!user)
+        return;
+    setUserName(user.fullName);
+    setLoading(false);
+  },[user]);
 
   const isActive = (path) => location.pathname === path;
 

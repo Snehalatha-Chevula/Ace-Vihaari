@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import Login from "./pages/Login"
 import Dashboard from "./pages/students/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -15,7 +15,7 @@ import { useUser } from "./context/userContext";
 
 function App() {
   console.log("app rendered");
-  const { setUser, setLoading, loading } = useUser();
+  const { setUser, setLoading, loading,user } = useUser();
   useEffect(()=>{
     const fetch = async ()=> {
       try{

@@ -175,7 +175,10 @@ exports.updateDetails = async (req,res) => {
                 }
                 );
             }
-            
+            await db.query(`
+                UPDATE notes SET uploadedBy = ? where facultyID = ?`,[details.name,details.registrationNumber]);
+            await db.query(`
+                UPDATE notifications SET sender = ? where facultyID = ?`,[details.name,details.registrationNumber]);
         }
 
         res.status(200).json({message : 'Profile updated successfully'});
