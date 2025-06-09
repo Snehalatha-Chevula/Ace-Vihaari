@@ -6,7 +6,7 @@ import axios from "axios";
 import { UserProvider } from "./context/userContext";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "https://ace-vihaari.onrender.com"; // Adjust if needed
+axios.defaults.baseURL = import.meta.env.VITE_API_URL; // Adjust if needed
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
