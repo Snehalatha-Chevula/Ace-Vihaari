@@ -329,23 +329,25 @@ const NotificationsPage = () => {
                         </div>
                         <p className="mt-1 text-sm text-gray-600">{notification.message}</p>
                         <div className="mt-2 text-xs text-gray-500 flex items-center flex-wrap gap-2">
-                          <span>
-                            {formatNotificationTime(notification.timestamp)}
-                          </span>
-                          {notification.sender && (
-                            <>
-                              <span className="inline-block w-1 h-1 rounded-full bg-gray-400 mx-1"></span>
-                              <span>
-                                From: {notification.sender}
-                              </span>
-                            </>
-                          )}
                           {notification.action && (
                             <>
-                              <span className="inline-block w-1 h-1 rounded-full bg-gray-400 mx-1"></span>
                               <a href={notification.actionLink} target='_blank' className="text-blue-600 hover:text-blue-700 font-medium">
                                 {notification.action}
                               </a>
+                              <span className="inline-block w-1 h-1 rounded-full bg-gray-400 mx-1"></span>
+                            </>
+                          )}
+                          
+                          <span>
+                            {formatNotificationTime(notification.timestamp)}
+                          </span>
+                        </div>
+                        <div className="mt-2 text-xs text-gray-500 flex items-center flex-wrap gap-2">
+                          {notification.sender && (
+                            <>
+                              <span>
+                                From: {notification.sender}
+                              </span>
                             </>
                           )}
                         </div>
