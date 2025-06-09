@@ -93,7 +93,7 @@ exports.getNotifications = async(request, response) => {
         }
         else{
             const [notifications] = await db.query(
-                `SELECT id, title, message, type, timestamp action, actionLink FROM notifications WHERE facultyID = ?
+                `SELECT id, title, message, type, timestamp, action, actionLink FROM notifications WHERE facultyID = ?
                 ORDER BY timestamp DESC;`,
                 [userID],
                 (err, result) => {
