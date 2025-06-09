@@ -18,7 +18,7 @@ const studentDataRoutes = require('./routes/studentDataRoute');
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173","https://ace-vihaari-mocha.vercel.app"], // replace with frontend URL
+  origin: ["http://localhost:5173","https://acevihaari.vercel.app"], // replace with frontend URL
   credentials: true,
 }));
 app.use(cookieParser());
