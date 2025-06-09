@@ -79,7 +79,7 @@ exports.getNotifications = async(request, response) => {
     try {
         if(role == 'student'){
             const [notifications] = await db.query(
-                `SELECT n.id, n.title, n.message, n.type, n.sender, n.timestamp, n.action, n.actionLink un.isRead
+                `SELECT n.id, n.title, n.message, n.type, n.sender, n.timestamp, n.action, n.actionLink, un.isRead
                 FROM user_notifications un
                 JOIN notifications n ON un.notificationID = n.id
                 WHERE un.userID = ?
