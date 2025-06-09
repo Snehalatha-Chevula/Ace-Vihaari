@@ -1,6 +1,8 @@
 require('dotenv').config();
 const axios = require('axios');
 const cheerio = require('cheerio');
+const fs = require("fs");
+const path = require("path");
 
 const mysql = require('mysql2/promise');
 
@@ -9,11 +11,15 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
 (async () => {
   try {
     const connection = await mysql.createConnection({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: process.env.DB_PORT,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        port: process.env.DB_PORT,
+        ssl: {
+            ssl: process.env.DB_SSL ? { rejectUnauthorized: true } : undefined,
+            ca: fs.readFileSync(path.join(__dirname, "./certs/tidb-ca.pem")),
+        },
     });
 
     try {
