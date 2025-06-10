@@ -12,7 +12,7 @@ exports.getCodingStats = async(req,res) =>{
         console.log("leetcode",leetcode);
         if(!leetcode || !codechef || !gfg){
             console.log("did not find user coding profile details");
-            return res.status(404).json({message:"PLease enter all coding profile details in profile page"}); 
+            return res.status(200).json({message:"noCodingProfiles"}); 
         }
 
         try{

@@ -31,8 +31,11 @@ const CodingPerformance = () => {
     const fetchData = async () => {
 
       try {
+        console.log("before response");
         let response = await axios.get(`/api/codingstats/getCodingStats/${userID}`);
-        if(response.status == 404) {
+        console.log("after response");
+        if(response.data.message) {
+          console.log("response status is 404");
           setPerformanceData(prev =>({
             ...prev,
             hasProfile : false
@@ -111,7 +114,7 @@ const CodingPerformance = () => {
       </StudentLayout>
     );
   }
-  
+
   if (performanceData.loading || loading) {
     return (
       <StudentLayout>
