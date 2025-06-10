@@ -105,9 +105,11 @@ const CodingPerformance = () => {
       <StudentLayout>
         <div className="flex items-center justify-center h-full">
           <div className="text-center">
-            <Code className="h-12 w-12 text-error-500 mx-auto" />
+            <svg className="h-12 w-12 text-error-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             <h2 className="mt-4 text-xl font-semibold text-gray-900">
-              PLease enter all coding profile details in profile page
+              Please enter all your coding profile details in profile page
             </h2>
           </div>
         </div>
