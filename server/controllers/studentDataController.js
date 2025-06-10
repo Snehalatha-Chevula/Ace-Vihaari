@@ -34,7 +34,7 @@ exports.setData = async (req,res) => {
                     VALUES(?,?,?,?,?,?,?,?,?,?)`,[sRollNum,sem1, sem2, sem3, sem4, sem5, sem6, sem7, sem8,currentCGPA]);
                 console.log("inserted in cpa");
                 await db.query(`
-                    INSERT INTO codingProfiles (userID) VALUES(?)`,[sRollNum]);
+                    INSERT INTO codingprofiles (userID) VALUES(?)`,[sRollNum]);
                 console.log("inserted into codingProfiles");
             }
             else{
