@@ -14,6 +14,7 @@ const CodingPerformance = () => {
   const [performanceData, setPerformanceData] = useState({
     loading: true,
     error: null,
+    hasProfile : true,
     platforms : [
       {},
       {},
@@ -31,6 +32,13 @@ const CodingPerformance = () => {
 
       try {
         let response = await axios.get(`/api/codingstats/getCodingStats/${userID}`);
+        if(response.status == 404) {
+          setPerformanceData(prev =>({
+            ...prev,
+            hasProfile : false
+          }));
+          return;
+        }
         const data = response.data.platforms;
 
         const leetcode = data[0];
@@ -89,7 +97,21 @@ const CodingPerformance = () => {
     fetchData();
   },[]);
 
-
+  if(!performanceData.hasProfile) {
+    return (
+      <StudentLayout>
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <Code className="h-12 w-12 text-error-500 mx-auto" />
+            <h2 className="mt-4 text-xl font-semibold text-gray-900">
+              PLease enter all coding profile details in profile page
+            </h2>
+          </div>
+        </div>
+      </StudentLayout>
+    );
+  }
+  
   if (performanceData.loading || loading) {
     return (
       <StudentLayout>
