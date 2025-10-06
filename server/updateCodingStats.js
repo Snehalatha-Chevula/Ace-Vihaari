@@ -30,8 +30,11 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
         for(let row of rows){
             const {userID, leetcode, codechef, gfg} = row;
             console.log(userID,leetcode,codechef,gfg);
-
-            let tps = 0;
+            let isValid = true;
+            if(userID == null || leetcode == null || codechef == null || gfg == null)
+                    isValid = false; 
+            if(isValid){
+                let tps = 0;
             let ts = 0;
             let gfgScore = 0;
             let leetcodeScore = 0;
@@ -41,7 +44,7 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                 const url = `https://auth.geeksforgeeks.org/user/${gfg}/practice`;
                 const response = await axios.get(url);
                 const $ = cheerio.load(response.data);
-                const divisions = $('.problemNavbar_head__cKSRi .problemNavbar_head_nav__a4K6P');
+                const divisions = $('.problemNavbar_head_cKSRi .problemNavbar_head_nav_a4K6P');
 
                 let pd = [];
                 let sum = 0;
@@ -96,7 +99,7 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                     j--;
                 }
                 let totalProblems = Number(tp.slice(j+1,tp.length));
-                const rating = $('.rating-number').text();
+                let rating = $('.rating-number').text();
 
                 codechefScore =  Number((totalProblems * 1 + (Number(rating) - 1000)/25).toFixed(0));
                 tps += totalProblems; 
@@ -105,7 +108,10 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                         SELECT * from codechef WHERE userName = ?`,
                         [codechef]
                 )
-
+                
+                if(rating.includes('?'))
+                    rating = 0;
+                console.log(totalProblems,rating,codechef);
                 if(isExists.length == 0) {
                     await connection.execute(`
                         INSERT INTO codechef (userName, totalProblems, rating) VALUES 
@@ -197,6 +203,7 @@ console.log(process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
                 console.log('Error while updating codingSummary table : ',e);
             }
         }
+            }
     }
     catch(e) {
         console.log('Unknown error , ',e);
