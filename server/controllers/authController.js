@@ -28,7 +28,7 @@ exports.loginUser = async(request, response) => {
             httpOnly: true,
             secure: true,
             sameSite: 'None', 
-            maxAge: 15 * 60 * 1000, 
+            maxAge: 60 * 24 * 7 * 60 * 1000, 
         });
 
         return response.status(200).json({
